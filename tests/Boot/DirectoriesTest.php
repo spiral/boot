@@ -38,6 +38,14 @@ class DirectoriesTest extends TestCase
         $this->assertDir(__DIR__ . '/app/runtime/cache', $dirs->get('cache'));
     }
 
+    /**
+     * @expectedException \Spiral\Boot\Exceptions\FrameworkException
+     */
+    public function testKernelException()
+    {
+        $core = TestCore::init([]);
+    }
+
     public function testSetDirectory()
     {
         $core = TestCore::init([
