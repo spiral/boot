@@ -49,7 +49,7 @@ if (!function_exists('directory')) {
      */
     function directory(string $alias): string
     {
-        return spiral(DirectoriesInterface::class)->directory($alias);
+        return spiral(DirectoriesInterface::class)->get($alias);
     }
 }
 
