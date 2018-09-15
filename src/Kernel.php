@@ -8,17 +8,17 @@
 
 namespace Spiral\Boot;
 
+use Spiral\Boot\Bootloaders\CoreBootloader;
+use Spiral\Boot\Exceptions\FrameworkException;
 use Spiral\Core\BootloadManager;
 use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
-use Spiral\Boot\Bootloaders\CoreBootloader;
-use Spiral\Boot\Exceptions\FrameworkException;
 
 /**
- * Core responsible for application initialization, bootloading of all required services, environment and directory
- * management, exception handling.
+ * Core responsible for application initialization, bootloading of all required services,
+ * environment and directory management, exception handling.
  */
-abstract class Boot
+abstract class Kernel
 {
     /**
      * Defines list of bootloaders to be used for core initialisation and all system components.
@@ -85,6 +85,7 @@ abstract class Boot
                 ContainerScope::runScope($this->container, function () use ($dispatcher) {
                     $dispatcher->serve();
                 });
+
                 return;
             }
         }
@@ -138,8 +139,8 @@ abstract class Boot
     /**
      * Initiate application core.
      *
-     * @param array                     $directories  Spiral directories should include root, libraries and application
-     *                                                directories.
+     * @param array                     $directories  Spiral directories should include root,
+     *                                                libraries and application directories.
      * @param EnvironmentInterface|null $environment  Application specific environment if any.
      * @param bool                      $handleErrors Enable global error handling.
      * @return self
