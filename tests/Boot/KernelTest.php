@@ -9,6 +9,7 @@
 namespace Spiral\Boot\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Spiral\Boot\DispatcherInterface;
 
 class KernelTest extends TestCase
 {
@@ -22,5 +23,34 @@ class KernelTest extends TestCase
         ]);
 
         $kernel->serve();
+    }
+
+    public function testDispatcher()
+    {
+        $kernel = TestCore::init([
+            'root' => __DIR__
+        ]);
+
+        $d = new TestDispatcher();
+        $kernel->addDispatcher($d);
+        $this->assertFalse($d->fired);
+
+        $kernel->serve();
+        $this->assertTrue($d->fired);
+    }
+}
+
+class TestDispatcher implements DispatcherInterface
+{
+    public $fired = false;
+
+    public function canServe(): bool
+    {
+        return true;
+    }
+
+    public function serve()
+    {
+        $this->fired = true;
     }
 }
