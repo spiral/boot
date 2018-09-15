@@ -11,7 +11,7 @@
          stopOnFailure="false"
          stopOnError="false">
     <testsuites>
-        <testsuite name="Spiral Environment Bootloader">
+        <testsuite name="Spiral Environment Bootloader and Dispatch Manager">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
