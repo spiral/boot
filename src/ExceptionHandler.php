@@ -8,14 +8,16 @@
 
 namespace Spiral\Boot;
 
+use Spiral\Boot\Exceptions\FatalException;
 use Spiral\Exceptions\AbstractHandler;
 use Spiral\Exceptions\ConsoleHandler;
 use Spiral\Exceptions\HtmlHandler;
-use Spiral\Boot\Exceptions\FatalException;
 
 /**
- * ExceptionHandler is responsible for global error handling (outside of dispatchers). Handler usually used in case
- * of bootload errors.
+ * ExceptionHandler is responsible for global error handling (outside of dispatchers). Handler
+ * usually used in case of bootload errors.
+ *
+ * @codeCoverageIgnore
  */
 final class ExceptionHandler
 {
@@ -37,7 +39,8 @@ final class ExceptionHandler
     {
         if (!empty($error = error_get_last())) {
             self::handleException(
-                new FatalException($error['message'], $error['type'], 0, $error['file'], $error['line'])
+                new FatalException($error['message'], $error['type'], 0, $error['file'],
+                    $error['line'])
             );
         }
     }
