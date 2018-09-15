@@ -18,7 +18,7 @@ use Spiral\Core\ContainerScope;
  * Core responsible for application initialization, bootloading of all required services,
  * environment and directory management, exception handling.
  */
-abstract class AbstractKernel
+abstract class AbstractKernel implements KernelInterface
 {
     /**
      * Defines list of bootloaders to be used for core initialisation and all system components.
@@ -48,6 +48,7 @@ abstract class AbstractKernel
     {
         $this->container = $container;
 
+        $this->container->bindSingleton(KernelInterface::class, $this);
         $this->container->bindSingleton(self::class, $this);
         $this->container->bindSingleton(static::class, $this);
 
