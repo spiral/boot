@@ -21,6 +21,17 @@ use Spiral\Exceptions\HtmlHandler;
  */
 final class ExceptionHandler
 {
+    /** @var resource */
+    private static $output = STDERR;
+
+    /**
+     * @param resource $output
+     */
+    public static function setOutput($output)
+    {
+        self::$output = $output;
+    }
+
     /**
      * Enable global exception handling.
      */
@@ -68,12 +79,12 @@ final class ExceptionHandler
     public static function handleException(\Throwable $e)
     {
         if (php_sapi_name() == 'cli') {
-            $handler = new ConsoleHandler(STDERR);
+            $handler = new ConsoleHandler(self::$output);
         } else {
             $handler = new HtmlHandler(HtmlHandler::INVERTED);
         }
 
         // we are safe to handle global exceptions (system level) with maximum verbosity
-        fwrite(STDERR, $handler->renderException($e, AbstractHandler::VERBOSITY_VERBOSE));
+        fwrite(self::$output, $handler->renderException($e, AbstractHandler::VERBOSITY_VERBOSE));
     }
 }
