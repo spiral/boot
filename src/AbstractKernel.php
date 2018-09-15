@@ -83,7 +83,7 @@ abstract class AbstractKernel implements KernelInterface
     {
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
-                $dispatcher->serve();
+                ContainerScope::runScope($this->container, [$dispatcher, 'serve']);
 
                 return;
             }
