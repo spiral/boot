@@ -114,7 +114,7 @@ abstract class Kernel
             $directories['app'] = $directories['root'] . '/app/';
         }
 
-        return array_merge($directories, [
+        return array_merge([
             // public root
             'public'    => $directories['root'] . '/public/',
 
@@ -125,7 +125,7 @@ abstract class Kernel
             // data directories
             'runtime'   => $directories['app'] . '/runtime/',
             'cache'     => $directories['app'] . '/runtime/cache/',
-        ]);
+        ], $directories);
     }
 
     /**
@@ -143,7 +143,7 @@ abstract class Kernel
      *                                                libraries and application directories.
      * @param EnvironmentInterface|null $environment  Application specific environment if any.
      * @param bool                      $handleErrors Enable global error handling.
-     * @return self
+     * @return self|static
      */
     public static function init(
         array $directories,

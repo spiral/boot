@@ -30,7 +30,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Spiral\\Boot\\Tests\\": "tests/Framework/"
+      "Spiral\\Boot\\Tests\\": "tests/Boot/"
     }
   }
 }

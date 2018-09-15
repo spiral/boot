@@ -8,6 +8,8 @@
 
 namespace Spiral\Boot\Bootloaders;
 
+use Spiral\Boot\DirectoriesInterface;
+use Spiral\Boot\Memory;
 use Spiral\Config\ConfigFactory;
 use Spiral\Config\Loaders\DirectoryLoader;
 use Spiral\Core\Bootloaders\Bootloader;
@@ -16,8 +18,6 @@ use Spiral\Core\FactoryInterface;
 use Spiral\Core\MemoryInterface;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
-use Spiral\Boot\DirectoriesInterface;
-use Spiral\Boot\Memory;
 
 final class CoreBootloader extends Bootloader
 {
@@ -36,7 +36,10 @@ final class CoreBootloader extends Bootloader
         DirectoriesInterface $directories,
         FactoryInterface $factory
     ): ConfiguratorInterface {
-        return new ConfigFactory(new DirectoryLoader($directories->get('config'), $factory), true);
+        return new ConfigFactory(
+            new DirectoryLoader($directories->get('config'), $factory),
+            true
+        );
     }
 
     /**
@@ -48,6 +51,9 @@ final class CoreBootloader extends Bootloader
         DirectoriesInterface $directories,
         FilesInterface $files
     ): MemoryInterface {
-        return new Memory($directories->get('cache'), $files);
+        return new Memory(
+            $directories->get('cache'),
+            $files
+        );
     }
 }
