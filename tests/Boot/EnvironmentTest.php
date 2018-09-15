@@ -28,7 +28,6 @@ class EnvironmentTest extends TestCase
         $this->assertSame('default', $env->get('other', 'default'));
     }
 
-
     public function testID()
     {
         $env = $this->getEnv(['key' => 'value']);
@@ -41,6 +40,14 @@ class EnvironmentTest extends TestCase
         $this->assertNotSame($id, $env->getID());
 
         $this->assertSame('value', $env->get('other', 'default'));
+    }
+
+
+    public function testNormalize()
+    {
+        $env = $this->getEnv(['key' => 'true', 'other' => false]);
+        $this->assertSame(true, $env->get('key'));
+        $this->assertSame(false, $env->get('other'));
     }
 
     /**

@@ -71,9 +71,9 @@ final class Environment implements EnvironmentInterface
 
     /**
      * @param mixed $value
-     * @return bool|null|string
+     * @return mixed
      */
-    protected function normalize($value): ?string
+    protected function normalize($value)
     {
         if (!is_string($value)) {
             return $value;
