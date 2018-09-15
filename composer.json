@@ -1,7 +1,7 @@
 {
   "name": "spiral/boot",
   "type": "library",
-  "description": "Spiral Environment Bootloader and Dispatch Manager",
+  "description": "Environment Bootloader and Dispatch Manager",
   "license": "MIT",
   "authors": [
     {
