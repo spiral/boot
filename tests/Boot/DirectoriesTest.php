@@ -34,8 +34,8 @@ class DirectoriesTest extends TestCase
         $this->assertDir(__DIR__ . '/app/config', $dirs->get('config'));
         $this->assertDir(__DIR__ . '/app/resources', $dirs->get('resources'));
 
-        $this->assertDir(__DIR__ . '/app/runtime', $dirs->get('runtime'));
-        $this->assertDir(__DIR__ . '/app/runtime/cache', $dirs->get('cache'));
+        $this->assertDir(__DIR__ . '/runtime', $dirs->get('runtime'));
+        $this->assertDir(__DIR__ . '/runtime/cache', $dirs->get('cache'));
     }
 
     /**
