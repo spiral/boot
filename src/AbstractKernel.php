@@ -18,7 +18,7 @@ use Spiral\Core\ContainerScope;
  * Core responsible for application initialization, bootloading of all required services,
  * environment and directory management, exception handling.
  */
-abstract class Kernel
+abstract class AbstractKernel
 {
     /**
      * Defines list of bootloaders to be used for core initialisation and all system components.

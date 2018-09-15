@@ -10,7 +10,7 @@ namespace Spiral\Boot\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\ExceptionHandler;
-use Spiral\Boot\Kernel;
+use Spiral\Boot\AbstractKernel;
 
 class ExceptionsTest extends TestCase
 {
@@ -27,7 +27,7 @@ class ExceptionsTest extends TestCase
     }
 }
 
-class BrokenCore extends Kernel
+class BrokenCore extends AbstractKernel
 {
     protected function bootstrap()
     {

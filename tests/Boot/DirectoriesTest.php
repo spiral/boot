@@ -10,7 +10,7 @@ namespace Spiral\Boot\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\DirectoriesInterface;
-use Spiral\Boot\Kernel;
+use Spiral\Boot\AbstractKernel;
 
 class DirectoriesTest extends TestCase
 {
@@ -102,7 +102,7 @@ class DirectoriesTest extends TestCase
     }
 }
 
-class TestCore extends Kernel
+class TestCore extends AbstractKernel
 {
     protected function bootstrap()
     {
