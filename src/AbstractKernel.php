@@ -83,9 +83,7 @@ abstract class AbstractKernel implements KernelInterface
     {
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
-                ContainerScope::runScope($this->container, function () use ($dispatcher) {
-                    $dispatcher->serve();
-                });
+                $dispatcher->serve();
 
                 return;
             }
@@ -119,13 +117,13 @@ abstract class AbstractKernel implements KernelInterface
             // public root
             'public'    => $directories['root'] . '/public/',
 
+            // data directories
+            'runtime'   => $directories['root'] . '/runtime/',
+            'cache'     => $directories['root'] . '/runtime/cache/',
+
             // application directories
             'config'    => $directories['app'] . '/config/',
             'resources' => $directories['app'] . '/resources/',
-
-            // data directories
-            'runtime'   => $directories['app'] . '/runtime/',
-            'cache'     => $directories['app'] . '/runtime/cache/',
         ], $directories);
     }
 
