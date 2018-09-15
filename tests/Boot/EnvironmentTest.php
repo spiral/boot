@@ -14,22 +14,30 @@ use Spiral\Boot\EnvironmentInterface;
 
 class EnvironmentTest extends TestCase
 {
-    public function testDirectories()
+    public function testValue()
     {
-        $core = TestCore::init([
-            'root' => __DIR__
-        ], new Environment([
-            'key' => 'value'
-        ]));
+        $env = $this->getEnv(['key' => 'value']);
 
-        /** @var EnvironmentInterface $env */
-        $env = $core->getContainer()->get(EnvironmentInterface::class);
+        $this->assertSame('value', $env->get('key'));
+    }
 
-        $env->saveData("test", "data");
-        $this->assertFileExists(__DIR__ . '/cache/test.php');
-        $this->assertSame("data", $env->loadData("test"));
+    public function testDefault()
+    {
+        $env = $this->getEnv(['key' => 'value']);
 
-        unlink(__DIR__ . '/cache/test.php');
-        $this->assertSame(null, $env->loadData("test"));
+        $this->assertSame('default', $env->get('other', 'default'));
+    }
+
+    /**
+     * @param array $env
+     * @return EnvironmentInterface
+     *
+     * @throws \Error
+     */
+    protected function getEnv(array $env): EnvironmentInterface
+    {
+        $core = TestCore::init(['root' => __DIR__], new Environment($env));
+
+        return $core->getContainer()->get(EnvironmentInterface::class);
     }
 }

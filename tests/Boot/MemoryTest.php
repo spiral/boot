@@ -13,7 +13,7 @@ use Spiral\Core\MemoryInterface;
 
 class MemoryTest extends TestCase
 {
-    public function testDirectories()
+    public function testMemory()
     {
         $core = TestCore::init([
             'root'  => __DIR__,
