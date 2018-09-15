@@ -75,7 +75,17 @@ class FunctionsTest extends TestCase
      */
     public function testSpiralException2()
     {
-        spiral(Invalid::class);
+        $core = TestCore::init([
+            'root'   => __DIR__,
+            'config' => __DIR__ . '/config'
+        ]);
+
+        /** @var ContainerInterface $c */
+        $c = $core->getContainer();
+
+        ContainerScope::runScope($c, function () {
+            spiral(Invalid::class);
+        });
     }
 
     /**
