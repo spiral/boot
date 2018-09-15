@@ -7,27 +7,11 @@
  */
 
 use Psr\Container\ContainerExceptionInterface;
-use Spiral\Core\Container\Autowire;
+use Spiral\Boot\DirectoriesInterface;
+use Spiral\Boot\EnvironmentInterface;
+use Spiral\Boot\Exceptions\DirectoryException;
 use Spiral\Core\ContainerScope;
 use Spiral\Core\Exceptions\ScopeException;
-use Spiral\Framework\DirectoriesInterface;
-use Spiral\Framework\EnvironmentInterface;
-use Spiral\Framework\Exceptions\DirectoryException;
-
-if (!function_exists('bind')) {
-    /**
-     * Shortcut for new Autowire().
-     *
-     * @param string $alias Class name or alias.
-     * @param array  $parameters
-     *
-     * @return Autowire
-     */
-    function bind(string $alias, array $parameters = []): Autowire
-    {
-        return new Autowire($alias, $parameters);
-    }
-}
 
 if (!function_exists('spiral')) {
     /**
@@ -81,25 +65,5 @@ if (!function_exists('env')) {
     function env(string $key, $default = null)
     {
         return spiral(EnvironmentInterface::class)->get($key, $default);
-    }
-}
-
-if (!function_exists('e')) {
-    /**
-     * Short alias for htmlentities(). This function is identical to htmlspecialchars() in all ways,
-     * except with htmlentities(), all characters which have HTML character entity equivalents are
-     * translated into these entities.
-     *
-     * @param string|null $string
-     *
-     * @return string
-     */
-    function e(string $string = null): string
-    {
-        if (is_null($string)) {
-            return '';
-        }
-
-        return htmlentities($string, ENT_QUOTES, 'UTF-8', false);
     }
 }
