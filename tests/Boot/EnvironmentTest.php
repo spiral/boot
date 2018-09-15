@@ -28,6 +28,21 @@ class EnvironmentTest extends TestCase
         $this->assertSame('default', $env->get('other', 'default'));
     }
 
+
+    public function testID()
+    {
+        $env = $this->getEnv(['key' => 'value']);
+
+        $id = $env->getID();
+
+        $this->assertNotEmpty($id);
+
+        $env->set('other', 'value');
+        $this->assertNotSame($id, $env->getID());
+
+        $this->assertSame('value', $env->get('other', 'default'));
+    }
+
     /**
      * @param array $env
      * @return EnvironmentInterface
