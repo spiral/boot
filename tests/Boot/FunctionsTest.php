@@ -73,6 +73,14 @@ class FunctionsTest extends TestCase
     /**
      * @expectedException \Spiral\Core\Exceptions\ScopeException
      */
+    public function testSpiralException2()
+    {
+        spiral(Invalid::class);
+    }
+
+    /**
+     * @expectedException \Spiral\Core\Exceptions\ScopeException
+     */
     public function testEnvException()
     {
         env("key");
