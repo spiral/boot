@@ -103,29 +103,7 @@ abstract class AbstractKernel implements KernelInterface
      * @param array $directories
      * @return array
      */
-    protected function mapDirectories(array $directories): array
-    {
-        if (!isset($directories['root'])) {
-            throw new FrameworkException("Missing required directory `root`.");
-        }
-
-        if (!isset($directories['app'])) {
-            $directories['app'] = $directories['root'] . '/app/';
-        }
-
-        return array_merge([
-            // public root
-            'public'    => $directories['root'] . '/public/',
-
-            // data directories
-            'runtime'   => $directories['root'] . '/runtime/',
-            'cache'     => $directories['root'] . '/runtime/cache/',
-
-            // application directories
-            'config'    => $directories['app'] . '/config/',
-            'resources' => $directories['app'] . '/resources/',
-        ], $directories);
-    }
+    abstract protected function mapDirectories(array $directories): array;
 
     /**
      * Bootload all registered classes using BootloadManager.
