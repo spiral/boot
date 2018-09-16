@@ -12,6 +12,7 @@ use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\Memory;
 use Spiral\Config\ConfigFactory;
 use Spiral\Config\Loaders\DirectoryLoader;
+use Spiral\Config\ModifierInterface;
 use Spiral\Core\Bootloaders\Bootloader;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\FactoryInterface;
@@ -23,8 +24,11 @@ final class CoreBootloader extends Bootloader
 {
     const SINGLETONS = [
         FilesInterface::class        => Files::class,
-        MemoryInterface::class       => [self::class, 'memory'],
-        ConfiguratorInterface::class => [self::class, 'configFactory'],
+        MemoryInterface::class       => Memory::class,
+        Memory::class                => [self::class, 'memory'],
+        ConfiguratorInterface::class => ConfigFactory::class,
+        ModifierInterface::class     => ConfigFactory::class,
+        ConfigFactory::class         => [self::class, 'configFactory'],
     ];
 
     /**
