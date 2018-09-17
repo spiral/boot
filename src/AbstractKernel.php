@@ -126,7 +126,7 @@ abstract class AbstractKernel implements KernelInterface
         array $directories,
         EnvironmentInterface $environment = null,
         bool $handleErrors = true
-    ): self {
+    ): ?self {
         if ($handleErrors) {
             ExceptionHandler::register();
         }
@@ -144,6 +144,8 @@ abstract class AbstractKernel implements KernelInterface
             });
         } catch (\Throwable $e) {
             ExceptionHandler::handleException($e);
+            
+            return null;
         }
 
         return $core;
