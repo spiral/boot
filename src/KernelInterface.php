@@ -8,7 +8,7 @@
 
 namespace Spiral\Boot;
 
-use Spiral\Boot\Exceptions\FrameworkException;
+use Spiral\Boot\Exception\FrameworkException;
 
 interface KernelInterface
 {

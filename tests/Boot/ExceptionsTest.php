@@ -11,7 +11,7 @@ namespace Spiral\Boot\Tests;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\ExceptionHandler;
-use Spiral\Boot\Exceptions\FrameworkException;
+use Spiral\Boot\Exception\FrameworkException;
 
 class ExceptionsTest extends TestCase
 {

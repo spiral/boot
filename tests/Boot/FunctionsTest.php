@@ -63,7 +63,7 @@ class FunctionsTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Core\Exceptions\ScopeException
+     * @expectedException \Spiral\Core\Exception\ScopeException
      */
     public function testSpiralException()
     {
@@ -71,7 +71,7 @@ class FunctionsTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Core\Exceptions\ScopeException
+     * @expectedException \Spiral\Core\Exception\ScopeException
      */
     public function testSpiralException2()
     {
@@ -89,7 +89,7 @@ class FunctionsTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Core\Exceptions\ScopeException
+     * @expectedException \Spiral\Core\Exception\ScopeException
      */
     public function testEnvException()
     {
@@ -97,7 +97,7 @@ class FunctionsTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Core\Exceptions\ScopeException
+     * @expectedException \Spiral\Core\Exception\ScopeException
      */
     public function testDirectoryException()
     {

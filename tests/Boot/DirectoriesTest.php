@@ -11,7 +11,7 @@ namespace Spiral\Boot\Tests;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\DirectoriesInterface;
-use Spiral\Boot\Exceptions\FrameworkException;
+use Spiral\Boot\Exception\FrameworkException;
 
 class DirectoriesTest extends TestCase
 {
@@ -40,7 +40,7 @@ class DirectoriesTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Boot\Exceptions\FrameworkException
+     * @expectedException \Spiral\Boot\Exception\FrameworkException
      */
     public function testKernelException()
     {
@@ -81,7 +81,7 @@ class DirectoriesTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Boot\Exceptions\DirectoryException
+     * @expectedException \Spiral\Boot\Exception\DirectoryException
      */
     public function testGetException()
     {

@@ -9,9 +9,9 @@
 use Psr\Container\ContainerExceptionInterface;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\EnvironmentInterface;
-use Spiral\Boot\Exceptions\DirectoryException;
+use Spiral\Boot\Exception\DirectoryException;
 use Spiral\Core\ContainerScope;
-use Spiral\Core\Exceptions\ScopeException;
+use Spiral\Core\Exception\ScopeException;
 
 if (!function_exists('spiral')) {
     /**

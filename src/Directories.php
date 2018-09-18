@@ -8,7 +8,7 @@
 
 namespace Spiral\Boot;
 
-use Spiral\Boot\Exceptions\DirectoryException;
+use Spiral\Boot\Exception\DirectoryException;
 
 /**
  * Manage application directories set.

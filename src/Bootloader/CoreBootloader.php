@@ -6,14 +6,14 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Boot\Bootloaders;
+namespace Spiral\Boot\Bootloader;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\Memory;
 use Spiral\Config\ConfigFactory;
-use Spiral\Config\Loaders\DirectoryLoader;
+use Spiral\Config\Loader\DirectoryLoader;
 use Spiral\Config\ModifierInterface;
-use Spiral\Core\Bootloaders\Bootloader;
+use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\MemoryInterface;

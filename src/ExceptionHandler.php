@@ -8,7 +8,7 @@
 
 namespace Spiral\Boot;
 
-use Spiral\Boot\Exceptions\FatalException;
+use Spiral\Boot\Exception\FatalException;
 use Spiral\Exceptions\AbstractHandler;
 use Spiral\Exceptions\ConsoleHandler;
 use Spiral\Exceptions\HtmlHandler;

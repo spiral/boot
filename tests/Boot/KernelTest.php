@@ -14,7 +14,7 @@ use Spiral\Boot\DispatcherInterface;
 class KernelTest extends TestCase
 {
     /**
-     * @expectedException \Spiral\Boot\Exceptions\FrameworkException
+     * @expectedException \Spiral\Boot\Exception\FrameworkException
      */
     public function testKernelException()
     {

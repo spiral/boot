@@ -5,7 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-namespace Spiral\Boot\Exceptions;
+namespace Spiral\Boot\Exception;
 
 /**
  * Raised on fatal exceptions.

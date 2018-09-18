@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Boot\Exceptions;
+namespace Spiral\Boot\Exception;
 
 class FrameworkException extends \RuntimeException
 {

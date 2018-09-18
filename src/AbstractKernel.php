@@ -8,8 +8,8 @@
 
 namespace Spiral\Boot;
 
-use Spiral\Boot\Bootloaders\CoreBootloader;
-use Spiral\Boot\Exceptions\FrameworkException;
+use Spiral\Boot\Bootloader\CoreBootloader;
+use Spiral\Boot\Exception\FrameworkException;
 use Spiral\Core\BootloadManager;
 use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
