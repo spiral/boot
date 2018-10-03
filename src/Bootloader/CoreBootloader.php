@@ -10,9 +10,7 @@ namespace Spiral\Boot\Bootloader;
 
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\Memory;
-use Spiral\Config\ConfigFactory;
-use Spiral\Config\Loader\DirectoryLoader;
-use Spiral\Config\ModifierInterface;
+use Spiral\Config;
 use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\ConfiguratorInterface;
 use Spiral\Core\FactoryInterface;
@@ -23,11 +21,11 @@ use Spiral\Files\FilesInterface;
 final class CoreBootloader extends Bootloader
 {
     const SINGLETONS = [
-        FilesInterface::class        => Files::class,
-        ConfiguratorInterface::class => ConfigFactory::class,
-        ModifierInterface::class     => ConfigFactory::class,
-        MemoryInterface::class       => [self::class, 'memory'],
-        ConfigFactory::class         => [self::class, 'configFactory'],
+        FilesInterface::class               => Files::class,
+        MemoryInterface::class              => [self::class, 'memory'],
+        ConfiguratorInterface::class        => Config\ConfiguratorInterface::class,
+        Config\ConfiguratorInterface::class => Config\ConfigFactory::class,
+        Config\ConfigFactory::class         => [self::class, 'configFactory'],
     ];
 
     /**
@@ -39,8 +37,8 @@ final class CoreBootloader extends Bootloader
         DirectoriesInterface $directories,
         FactoryInterface $factory
     ): ConfiguratorInterface {
-        return new ConfigFactory(
-            new DirectoryLoader($directories->get('config'), $factory),
+        return new  Config\ConfigFactory(
+            new Config\Loader\DirectoryLoader($directories->get('config'), $factory),
             true
         );
     }
