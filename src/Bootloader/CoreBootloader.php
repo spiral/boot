@@ -9,10 +9,14 @@
 namespace Spiral\Boot\Bootloader;
 
 use Spiral\Boot\DirectoriesInterface;
+use Spiral\Boot\Finalizer;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Boot\Memory;
-use Spiral\Config;
+use Spiral\Config\ConfigFactory;
+use Spiral\Config\ConfiguratorInterface;
+use Spiral\Config\Loader\DirectoryLoader;
 use Spiral\Core\Bootloader\Bootloader;
-use Spiral\Core\ConfiguratorInterface;
+use Spiral\Core\ConfigsInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Core\MemoryInterface;
 use Spiral\Files\Files;
@@ -21,11 +25,12 @@ use Spiral\Files\FilesInterface;
 final class CoreBootloader extends Bootloader
 {
     const SINGLETONS = [
-        FilesInterface::class               => Files::class,
-        MemoryInterface::class              => [self::class, 'memory'],
-        ConfiguratorInterface::class        => Config\ConfiguratorInterface::class,
-        Config\ConfiguratorInterface::class => Config\ConfigFactory::class,
-        Config\ConfigFactory::class         => [self::class, 'configFactory'],
+        FilesInterface::class        => Files::class,
+        MemoryInterface::class       => [self::class, 'memory'],
+        FinalizerInterface::class    => Finalizer::class,
+        ConfigsInterface::class      => ConfiguratorInterface::class,
+        ConfiguratorInterface::class => ConfigFactory::class,
+        ConfigFactory::class         => [self::class, 'configFactory'],
     ];
 
     /**
@@ -37,10 +42,7 @@ final class CoreBootloader extends Bootloader
         DirectoriesInterface $directories,
         FactoryInterface $factory
     ): ConfiguratorInterface {
-        return new  Config\ConfigFactory(
-            new Config\Loader\DirectoryLoader($directories->get('config'), $factory),
-            true
-        );
+        return new ConfigFactory(new DirectoryLoader($directories->get('config'), $factory), true);
     }
 
     /**
@@ -52,9 +54,6 @@ final class CoreBootloader extends Bootloader
         DirectoriesInterface $directories,
         FilesInterface $files
     ): MemoryInterface {
-        return new Memory(
-            $directories->get('cache'),
-            $files
-        );
+        return new Memory($directories->get('cache'), $files);
     }
 }
