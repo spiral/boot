@@ -26,10 +26,10 @@ final class CoreBootloader extends Bootloader
 {
     const SINGLETONS = [
         FilesInterface::class        => Files::class,
-        MemoryInterface::class       => [self::class, 'memory'],
         FinalizerInterface::class    => Finalizer::class,
         ConfigsInterface::class      => ConfiguratorInterface::class,
         ConfiguratorInterface::class => ConfigFactory::class,
+        MemoryInterface::class       => [self::class, 'memory'],
         ConfigFactory::class         => [self::class, 'configFactory'],
     ];
 
