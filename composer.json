@@ -12,7 +12,7 @@
   "require": {
     "php": "^7.1",
     "spiral/core": "^1.0.7",
-    "spiral/files": "^1.0.0",
+    "spiral/files": "^2.0.0",
     "spiral/config": "^1.0.0",
     "spiral/exceptions": "^1.0.2"
   },
