@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Spiral Framework.
  *
@@ -144,7 +145,7 @@ abstract class AbstractKernel implements KernelInterface
             });
         } catch (\Throwable $e) {
             ExceptionHandler::handleException($e);
-            
+
             return null;
         }
 
