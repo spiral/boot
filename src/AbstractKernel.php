@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 /**
  * Spiral Framework.
  *
@@ -117,9 +116,9 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Initiate application core.
      *
-     * @param array                     $directories  Spiral directories should include root,
+     * @param array                     $directories Spiral directories should include root,
      *                                                libraries and application directories.
-     * @param EnvironmentInterface|null $environment  Application specific environment if any.
+     * @param EnvironmentInterface|null $environment Application specific environment if any.
      * @param bool                      $handleErrors Enable global error handling.
      * @return self|static
      */
