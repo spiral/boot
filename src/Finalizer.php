@@ -24,10 +24,10 @@ final class Finalizer implements FinalizerInterface
     /**
      * @inheritdoc
      */
-    public function finalize()
+    public function finalize(bool $terminate = false)
     {
         foreach ($this->finalizers as $finalizer) {
-            call_user_func($finalizer);
+            call_user_func($finalizer, $terminate);
         }
     }
 }
