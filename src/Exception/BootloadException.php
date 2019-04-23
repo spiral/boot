@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace Spiral\Boot\Exception;
 
 /**
- * Undefined directory alias.
+ * Bootload exception.
  */
-class DirectoryException extends BootException
+class BootloadException extends \RuntimeException
 {
 
 }

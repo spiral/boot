@@ -5,12 +5,15 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Boot\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Spiral\Boot\Environment;
+use Spiral\Boot\Tests\Fixtures\TestConfig;
+use Spiral\Boot\Tests\Fixtures\TestCore;
 use Spiral\Core\ContainerScope;
 
 class FunctionsTest extends TestCase

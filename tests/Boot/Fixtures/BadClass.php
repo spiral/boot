@@ -7,12 +7,9 @@
  */
 declare(strict_types=1);
 
-namespace Spiral\Boot\Exception;
+namespace Spiral\Boot\Tests\Fixtures;
 
-/**
- * Undefined directory alias.
- */
-class DirectoryException extends BootException
+abstract class BadClass
 {
 
 }

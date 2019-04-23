@@ -1,11 +1,11 @@
 <?php
-declare(strict_types=1);
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Boot\Bootloader;
 
@@ -13,25 +13,27 @@ use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\Finalizer;
 use Spiral\Boot\FinalizerInterface;
 use Spiral\Boot\Memory;
-use Spiral\Config\ConfigFactory;
+use Spiral\Boot\MemoryInterface;
+use Spiral\Config\ConfigManager;
 use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Loader\DirectoryLoader;
-use Spiral\Core\Bootloader\Bootloader;
 use Spiral\Core\ConfigsInterface;
 use Spiral\Core\FactoryInterface;
-use Spiral\Core\MemoryInterface;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 
+/**
+ * Bootloads core services.
+ */
 final class CoreBootloader extends Bootloader
 {
     const SINGLETONS = [
         FilesInterface::class        => Files::class,
         FinalizerInterface::class    => Finalizer::class,
-        ConfigsInterface::class      => ConfiguratorInterface::class,
-        ConfiguratorInterface::class => ConfigFactory::class,
         MemoryInterface::class       => [self::class, 'memory'],
-        ConfigFactory::class         => [self::class, 'configFactory'],
+        ConfigsInterface::class      => ConfiguratorInterface::class,
+        ConfiguratorInterface::class => ConfigManager::class,
+        ConfigManager::class         => [self::class, 'configManager'],
     ];
 
     /**
@@ -39,11 +41,11 @@ final class CoreBootloader extends Bootloader
      * @param FactoryInterface     $factory
      * @return ConfiguratorInterface
      */
-    protected function configFactory(
+    protected function configManager(
         DirectoriesInterface $directories,
         FactoryInterface $factory
     ): ConfiguratorInterface {
-        return new ConfigFactory(new DirectoryLoader($directories->get('config'), $factory), true);
+        return new ConfigManager(new DirectoryLoader($directories->get('config'), $factory), true);
     }
 
     /**

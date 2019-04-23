@@ -1,11 +1,11 @@
 <?php
-declare(strict_types=1);
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Boot;
 
@@ -25,10 +25,10 @@ final class Finalizer implements FinalizerInterface
     /**
      * @inheritdoc
      */
-    public function finalize()
+    public function finalize(bool $terminate = false)
     {
         foreach ($this->finalizers as $finalizer) {
-            call_user_func($finalizer);
+            call_user_func($finalizer, $terminate);
         }
     }
 }

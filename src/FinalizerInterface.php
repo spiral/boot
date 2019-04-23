@@ -1,11 +1,11 @@
 <?php
-declare(strict_types=1);
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Boot;
 
@@ -24,6 +24,8 @@ interface FinalizerInterface
 
     /**
      * Finalize execution.
+     *
+     * @param bool $terminate Set to true if finalization is caused on application termination.
      */
-    public function finalize();
+    public function finalize(bool $terminate = false);
 }

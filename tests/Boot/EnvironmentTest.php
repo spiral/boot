@@ -5,12 +5,14 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Boot\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\Environment;
 use Spiral\Boot\EnvironmentInterface;
+use Spiral\Boot\Tests\Fixtures\TestCore;
 
 class EnvironmentTest extends TestCase
 {
@@ -41,7 +43,6 @@ class EnvironmentTest extends TestCase
 
         $this->assertSame('value', $env->get('other', 'default'));
     }
-
 
     public function testNormalize()
     {
