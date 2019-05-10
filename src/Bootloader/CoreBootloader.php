@@ -10,8 +10,6 @@ declare(strict_types=1);
 namespace Spiral\Boot\Bootloader;
 
 use Spiral\Boot\DirectoriesInterface;
-use Spiral\Boot\Finalizer;
-use Spiral\Boot\FinalizerInterface;
 use Spiral\Boot\Memory;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Config\ConfigManager;
