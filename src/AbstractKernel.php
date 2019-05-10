@@ -37,6 +37,9 @@ abstract class AbstractKernel implements KernelInterface
     /** @var BootloadManager */
     protected $bootloader;
 
+    /** @var FinalizerInterface */
+    protected $finalizer;
+
     /** @var DispatcherInterface[] */
     private $dispatchers = [];
 
@@ -57,8 +60,19 @@ abstract class AbstractKernel implements KernelInterface
             new Directories($this->mapDirectories($directories))
         );
 
+        $this->finalizer = new Finalizer();
+        $this->container->bindSingleton(FinalizerInterface::class, $this->finalizer);
+
         $this->bootloader = new BootloadManager($this->container);
         $this->bootloader->bootload(static::SYSTEM);
+    }
+
+    /**
+     * Terminate the application.
+     */
+    public function __destruct()
+    {
+        $this->finalizer->finalize(true);
     }
 
     /**

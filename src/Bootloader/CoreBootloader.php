@@ -9,8 +9,6 @@
 namespace Spiral\Boot\Bootloader;
 
 use Spiral\Boot\DirectoriesInterface;
-use Spiral\Boot\Finalizer;
-use Spiral\Boot\FinalizerInterface;
 use Spiral\Boot\Memory;
 use Spiral\Config\ConfigFactory;
 use Spiral\Config\ConfiguratorInterface;
@@ -26,7 +24,6 @@ final class CoreBootloader extends Bootloader
 {
     const SINGLETONS = [
         FilesInterface::class        => Files::class,
-        FinalizerInterface::class    => Finalizer::class,
         ConfigsInterface::class      => ConfiguratorInterface::class,
         ConfiguratorInterface::class => ConfigFactory::class,
         MemoryInterface::class       => [self::class, 'memory'],
