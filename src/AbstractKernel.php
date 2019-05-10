@@ -34,11 +34,11 @@ abstract class AbstractKernel implements KernelInterface
     /** @var Container */
     protected $container;
 
-    /** @var BootloadManager */
-    protected $bootloader;
-
     /** @var FinalizerInterface */
     protected $finalizer;
+
+    /** @var BootloadManager */
+    protected $bootloader;
 
     /** @var DispatcherInterface[] */
     private $dispatchers = [];
@@ -130,9 +130,9 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Initiate application core.
      *
-     * @param array                     $directories  Spiral directories should include root,
+     * @param array                     $directories Spiral directories should include root,
      *                                                libraries and application directories.
-     * @param EnvironmentInterface|null $environment  Application specific environment if any.
+     * @param EnvironmentInterface|null $environment Application specific environment if any.
      * @param bool                      $handleErrors Enable global error handling.
      * @return self|static
      */
