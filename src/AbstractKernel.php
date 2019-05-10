@@ -1,16 +1,16 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Boot;
 
 use Spiral\Boot\Bootloader\CoreBootloader;
-use Spiral\Boot\Exception\FrameworkException;
-use Spiral\Core\BootloadManager;
+use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
 use Spiral\Core\ContainerScope;
 
@@ -90,7 +90,7 @@ abstract class AbstractKernel implements KernelInterface
      * Start application and serve user requests using selected dispatcher or throw
      * an exception.
      *
-     * @throws FrameworkException
+     * @throws BootException
      * @throws \Throwable
      */
     public function serve()
@@ -103,7 +103,7 @@ abstract class AbstractKernel implements KernelInterface
             }
         }
 
-        throw new FrameworkException("Unable to locate active dispatcher.");
+        throw new BootException("Unable to locate active dispatcher.");
     }
 
     /**
@@ -130,9 +130,9 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Initiate application core.
      *
-     * @param array                     $directories Spiral directories should include root,
+     * @param array                     $directories  Spiral directories should include root,
      *                                                libraries and application directories.
-     * @param EnvironmentInterface|null $environment Application specific environment if any.
+     * @param EnvironmentInterface|null $environment  Application specific environment if any.
      * @param bool                      $handleErrors Enable global error handling.
      * @return self|static
      */

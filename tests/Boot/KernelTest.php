@@ -5,16 +5,18 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Boot\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\DispatcherInterface;
+use Spiral\Boot\Tests\Fixtures\TestCore;
 
 class KernelTest extends TestCase
 {
     /**
-     * @expectedException \Spiral\Boot\Exception\FrameworkException
+     * @expectedException \Spiral\Boot\Exception\BootException
      */
     public function testKernelException()
     {

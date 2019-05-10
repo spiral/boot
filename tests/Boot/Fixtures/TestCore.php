@@ -7,33 +7,20 @@
  */
 declare(strict_types=1);
 
-namespace Spiral\Boot\Tests;
+namespace Spiral\Boot\Tests\Fixtures;
 
-use PHPUnit\Framework\TestCase;
 use Spiral\Boot\AbstractKernel;
-use Spiral\Boot\ExceptionHandler;
 use Spiral\Boot\Exception\BootException;
 
-class ExceptionsTest extends TestCase
-{
-    public function testKernelException()
-    {
-        $output = fopen('php://memory', 'rwb');
-        ExceptionHandler::setOutput($output);
-        $kernel = BrokenCore::init(['root' => __DIR__]);
-
-        ExceptionHandler::setOutput(STDERR);
-
-        fseek($output, 0);
-        $this->assertContains('undefined', fread($output, 10000));
-    }
-}
-
-class BrokenCore extends AbstractKernel
+class TestCore extends AbstractKernel
 {
     protected function bootstrap()
     {
-        echo $undefined;
+    }
+
+    public function getContainer()
+    {
+        return $this->container;
     }
 
     /**

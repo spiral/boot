@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 use Psr\Container\ContainerExceptionInterface;
 use Spiral\Boot\DirectoriesInterface;
@@ -38,10 +39,9 @@ if (!function_exists('spiral')) {
 
 if (!function_exists('directory')) {
     /**
-     * Get directory alias value.
+     * Get directory alias value. Uses application core from the current global scope.
      *
      * @param string $alias Directory alias, ie. "framework".
-     *
      * @return string
      *
      * @throws ScopeException
@@ -55,11 +55,10 @@ if (!function_exists('directory')) {
 
 if (!function_exists('env')) {
     /**
-     * Gets the value of an environment variable.
+     * Gets the value of an environment variable. Uses application core from the current global scope.
      *
      * @param string $key
      * @param mixed  $default
-     *
      * @return mixed
      */
     function env(string $key, $default = null)

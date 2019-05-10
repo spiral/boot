@@ -1,14 +1,15 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Boot;
 
-use Spiral\Boot\Exception\FrameworkException;
+use Spiral\Boot\Exception\BootException;
 
 interface KernelInterface
 {
@@ -24,7 +25,7 @@ interface KernelInterface
      * Start application and serve user requests using selected dispatcher or throw
      * an exception.
      *
-     * @throws FrameworkException
+     * @throws BootException
      * @throws \Throwable
      */
     public function serve();

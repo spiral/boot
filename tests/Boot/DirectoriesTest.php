@@ -5,13 +5,15 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Boot\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\DirectoriesInterface;
-use Spiral\Boot\Exception\FrameworkException;
+use Spiral\Boot\Exception\BootException;
+use Spiral\Boot\Tests\Fixtures\TestCore;
 
 class DirectoriesTest extends TestCase
 {
@@ -40,7 +42,7 @@ class DirectoriesTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Boot\Exception\FrameworkException
+     * @expectedException \Spiral\Boot\Exception\BootException
      */
     public function testKernelException()
     {
@@ -100,47 +102,5 @@ class DirectoriesTest extends TestCase
     {
         $path = str_replace(['\\', '//'], '/', $path);
         $this->assertSame(rtrim($path, '/') . '/', $value);
-    }
-}
-
-class TestCore extends AbstractKernel
-{
-    protected function bootstrap()
-    {
-    }
-
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * Normalizes directory list and adds all required alises.
-     *
-     * @param array $directories
-     * @return array
-     */
-    protected function mapDirectories(array $directories): array
-    {
-        if (!isset($directories['root'])) {
-            throw new FrameworkException("Missing required directory `root`.");
-        }
-
-        if (!isset($directories['app'])) {
-            $directories['app'] = $directories['root'] . '/app/';
-        }
-
-        return array_merge([
-            // public root
-            'public'    => $directories['root'] . '/public/',
-
-            // data directories
-            'runtime'   => $directories['root'] . '/runtime/',
-            'cache'     => $directories['root'] . '/runtime/cache/',
-
-            // application directories
-            'config'    => $directories['app'] . '/config/',
-            'resources' => $directories['app'] . '/resources/',
-        ], $directories);
     }
 }
