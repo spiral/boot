@@ -107,7 +107,7 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
-     * Bootstrap application. Must be executed before start method.
+     * Bootstrap application. Must be executed before serve method.
      */
     abstract protected function bootstrap();
 
