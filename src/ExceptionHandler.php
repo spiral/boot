@@ -50,8 +50,13 @@ final class ExceptionHandler
     {
         if (!empty($error = error_get_last())) {
             self::handleException(
-                new FatalException($error['message'], $error['type'], 0, $error['file'],
-                    $error['line'])
+                new FatalException(
+                    $error['message'],
+                    $error['type'],
+                    0,
+                    $error['file'],
+                    $error['line']
+                )
             );
         }
     }

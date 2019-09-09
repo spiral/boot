@@ -1,26 +1,16 @@
 <?php
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-declare(strict_types=1);
+
 
 namespace Spiral\Boot\Tests\Fixtures;
 
 use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Exception\BootException;
 
-class TestCore extends AbstractKernel
+class BrokenCore extends AbstractKernel
 {
     protected function bootstrap()
     {
-    }
-
-    public function getContainer()
-    {
-        return $this->container;
+        echo $undefined;
     }
 
     /**
@@ -41,14 +31,14 @@ class TestCore extends AbstractKernel
 
         return array_merge([
             // public root
-            'public'    => $directories['root'] . '/public/',
+            'public' => $directories['root'] . '/public/',
 
             // data directories
-            'runtime'   => $directories['root'] . '/runtime/',
-            'cache'     => $directories['root'] . '/runtime/cache/',
+            'runtime' => $directories['root'] . '/runtime/',
+            'cache' => $directories['root'] . '/runtime/cache/',
 
             // application directories
-            'config'    => $directories['app'] . '/config/',
+            'config' => $directories['app'] . '/config/',
             'resources' => $directories['app'] . '/resources/',
         ], $directories);
     }
