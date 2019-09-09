@@ -33,26 +33,24 @@ class KernelTest extends TestCase
             'root' => __DIR__
         ]);
 
-        $d = new TestDispatcher();
+        $d = new class implements DispatcherInterface
+        {
+            public $fired = false;
+
+            public function canServe(): bool
+            {
+                return true;
+            }
+
+            public function serve()
+            {
+                $this->fired = true;
+            }
+        };
         $kernel->addDispatcher($d);
         $this->assertFalse($d->fired);
 
         $kernel->serve();
         $this->assertTrue($d->fired);
-    }
-}
-
-class TestDispatcher implements DispatcherInterface
-{
-    public $fired = false;
-
-    public function canServe(): bool
-    {
-        return true;
-    }
-
-    public function serve()
-    {
-        $this->fired = true;
     }
 }

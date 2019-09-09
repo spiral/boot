@@ -11,5 +11,4 @@ namespace Spiral\Boot\Tests\Fixtures;
 
 abstract class BadClass
 {
-
 }

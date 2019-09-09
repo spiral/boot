@@ -14,5 +14,4 @@ namespace Spiral\Boot\Exception;
  */
 class DirectoryException extends BootException
 {
-
 }
