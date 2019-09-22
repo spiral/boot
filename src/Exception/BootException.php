@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\Exception;
 
-/**
- * Bootload exception.
- */
-class BootloadException extends \RuntimeException
+class BootException extends \RuntimeException
 {
 }
