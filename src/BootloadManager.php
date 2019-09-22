@@ -9,10 +9,8 @@ declare(strict_types=1);
 
 namespace Spiral\Boot;
 
-use Psr\Container\ContainerExceptionInterface;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 use Spiral\Boot\Bootloader\DependedInterface;
-use Spiral\Boot\Exception\BootloadException;
 use Spiral\Core\Container;
 
 /**
@@ -62,15 +60,11 @@ final class BootloadManager implements Container\SingletonInterface
      *
      * @param array $classes
      *
-     * @throws BootloadException
+     * @throws \Throwable
      */
     public function bootload(array $classes)
     {
-        try {
-            $this->boot($classes);
-        } catch (\Throwable|ContainerExceptionInterface $e) {
-            throw new BootloadException($e->getMessage(), $e->getCode(), $e);
-        }
+        $this->boot($classes);
     }
 
     /**
@@ -78,8 +72,7 @@ final class BootloadManager implements Container\SingletonInterface
      *
      * @param array $classes
      *
-     * @throws ContainerExceptionInterface
-     * @throws \ReflectionException
+     * @throws \Throwable
      */
     protected function boot(array $classes)
     {
@@ -109,7 +102,7 @@ final class BootloadManager implements Container\SingletonInterface
      * @param BootloaderInterface $bootloader
      * @param array               $options
      *
-     * @throws \ReflectionException
+     * @throws \Throwable
      */
     protected function initBootloader(BootloaderInterface $bootloader, array $options = [])
     {
