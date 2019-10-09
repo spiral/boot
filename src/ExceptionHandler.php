@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -28,7 +29,7 @@ final class ExceptionHandler
     /**
      * @param resource $output
      */
-    public static function setOutput($output)
+    public static function setOutput($output): void
     {
         self::$output = $output;
     }
@@ -36,7 +37,7 @@ final class ExceptionHandler
     /**
      * Enable global exception handling.
      */
-    public static function register()
+    public static function register(): void
     {
         register_shutdown_function([self::class, 'handleShutdown']);
         set_error_handler([self::class, 'handleError']);
@@ -46,7 +47,7 @@ final class ExceptionHandler
     /**
      * Handle php shutdown and search for fatal errors.
      */
-    public static function handleShutdown()
+    public static function handleShutdown(): void
     {
         if (!empty($error = error_get_last())) {
             self::handleException(
@@ -71,7 +72,7 @@ final class ExceptionHandler
      *
      * @throws \ErrorException
      */
-    public static function handleError($code, $message, $filename = '', $line = 0)
+    public static function handleError($code, $message, $filename = '', $line = 0): void
     {
         throw new \ErrorException($message, $code, 0, $filename, $line);
     }
@@ -81,7 +82,7 @@ final class ExceptionHandler
      *
      * @param \Throwable $e
      */
-    public static function handleException(\Throwable $e)
+    public static function handleException(\Throwable $e): void
     {
         if (php_sapi_name() == 'cli') {
             $handler = new ConsoleHandler(self::$output);

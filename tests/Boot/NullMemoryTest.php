@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -15,14 +16,14 @@ use Spiral\Boot\NullMemory;
 
 class NullMemoryTest extends TestCase
 {
-    public function testLoadData()
+    public function testLoadData(): void
     {
         $memory = new NullMemory();
         $this->assertInstanceOf(MemoryInterface::class, $memory);
         $this->assertNull($memory->loadData('test'));
     }
 
-    public function testSaveData()
+    public function testSaveData(): void
     {
         $memory = new NullMemory();
         $this->assertInstanceOf(MemoryInterface::class, $memory);

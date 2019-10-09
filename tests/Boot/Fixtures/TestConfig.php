@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -15,5 +16,6 @@ use Spiral\Core\Traits\Config\AliasTrait;
 class TestConfig extends InjectableConfig
 {
     use AliasTrait;
-    const CONFIG = "test";
+
+    public const CONFIG = 'test';
 }
