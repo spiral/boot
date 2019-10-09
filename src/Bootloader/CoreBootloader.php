@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -25,7 +26,7 @@ use Spiral\Files\FilesInterface;
  */
 final class CoreBootloader extends Bootloader
 {
-    const SINGLETONS = [
+    protected const SINGLETONS = [
         FilesInterface::class        => Files::class,
         MemoryInterface::class       => [self::class, 'memory'],
         ConfigsInterface::class      => ConfiguratorInterface::class,

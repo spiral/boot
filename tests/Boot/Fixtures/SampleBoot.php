@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -14,12 +15,12 @@ use Spiral\Core\BinderInterface;
 
 class SampleBoot extends Bootloader
 {
-    const BOOT = true;
+    public const BOOT = true;
 
-    const BINDINGS   = ['abc' => self::class];
-    const SINGLETONS = ['single' => self::class];
+    public const BINDINGS   = ['abc' => self::class];
+    public const SINGLETONS = ['single' => self::class];
 
-    public function boot(BinderInterface $binder)
+    public function boot(BinderInterface $binder): void
     {
         $binder->bind('cde', new SampleClass());
     }

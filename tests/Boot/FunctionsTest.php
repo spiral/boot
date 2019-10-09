@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -18,7 +19,7 @@ use Spiral\Core\ContainerScope;
 
 class FunctionsTest extends TestCase
 {
-    public function testSpiral()
+    public function testSpiral(): void
     {
         $core = TestCore::init([
             'root'   => __DIR__,
@@ -28,12 +29,12 @@ class FunctionsTest extends TestCase
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
 
-        ContainerScope::runScope($c, function () {
+        ContainerScope::runScope($c, function (): void {
             $this->assertSame(['key' => 'value'], spiral(TestConfig::class)->toArray());
         });
     }
 
-    public function testEnv()
+    public function testEnv(): void
     {
         $core = TestCore::init([
             'root'   => __DIR__,
@@ -45,12 +46,12 @@ class FunctionsTest extends TestCase
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
 
-        ContainerScope::runScope($c, function () {
+        ContainerScope::runScope($c, function (): void {
             $this->assertSame(true, env('key'));
         });
     }
 
-    public function testDirectory()
+    public function testDirectory(): void
     {
         $core = TestCore::init([
             'root'   => __DIR__,
@@ -60,7 +61,7 @@ class FunctionsTest extends TestCase
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
 
-        ContainerScope::runScope($c, function () {
+        ContainerScope::runScope($c, function (): void {
             $this->assertDir(__DIR__ . '/config', directory('config'));
         });
     }
@@ -68,7 +69,7 @@ class FunctionsTest extends TestCase
     /**
      * @expectedException \Spiral\Core\Exception\ScopeException
      */
-    public function testSpiralException()
+    public function testSpiralException(): void
     {
         spiral(TestConfig::class);
     }
@@ -76,7 +77,7 @@ class FunctionsTest extends TestCase
     /**
      * @expectedException \Spiral\Core\Exception\ScopeException
      */
-    public function testSpiralException2()
+    public function testSpiralException2(): void
     {
         $core = TestCore::init([
             'root'   => __DIR__,
@@ -86,7 +87,7 @@ class FunctionsTest extends TestCase
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
 
-        ContainerScope::runScope($c, function () {
+        ContainerScope::runScope($c, function (): void {
             spiral(Invalid::class);
         });
     }
@@ -94,20 +95,20 @@ class FunctionsTest extends TestCase
     /**
      * @expectedException \Spiral\Core\Exception\ScopeException
      */
-    public function testEnvException()
+    public function testEnvException(): void
     {
-        env("key");
+        env('key');
     }
 
     /**
      * @expectedException \Spiral\Core\Exception\ScopeException
      */
-    public function testDirectoryException()
+    public function testDirectoryException(): void
     {
-        directory("key");
+        directory('key');
     }
 
-    private function assertDir($path, $value)
+    private function assertDir($path, $value): void
     {
         $path = str_replace(['\\', '//'], '/', $path);
         $this->assertSame(rtrim($path, '/') . '/', $value);
