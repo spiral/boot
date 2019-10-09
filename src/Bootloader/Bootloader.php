@@ -20,9 +20,9 @@ namespace Spiral\Boot\Bootloader;
  */
 abstract class Bootloader implements BootloaderInterface, DependedInterface
 {
-    const BINDINGS     = [];
-    const SINGLETONS   = [];
-    const DEPENDENCIES = [];
+    protected const BINDINGS     = [];
+    protected const SINGLETONS   = [];
+    protected const DEPENDENCIES = [];
 
     /**
      * {@inheritdoc}
