@@ -14,5 +14,4 @@ namespace Spiral\Boot\Exception;
  */
 class EnvironmentException extends BootException
 {
-
 }

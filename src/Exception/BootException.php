@@ -11,5 +11,4 @@ namespace Spiral\Boot\Exception;
 
 class BootException extends \RuntimeException
 {
-
 }

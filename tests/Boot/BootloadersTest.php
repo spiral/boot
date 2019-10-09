@@ -32,7 +32,7 @@ class BootloadersTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Boot\Exception\BootloadException
+     * @expectedException \Spiral\Core\Exception\Container\NotFoundException
      */
     public function testException()
     {
