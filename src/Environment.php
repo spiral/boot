@@ -51,7 +51,7 @@ final class Environment implements EnvironmentInterface
     /**
      * @inheritdoc
      */
-    public function set(string $name, $value)
+    public function set(string $name, $value): void
     {
         $this->values[$name] = $_ENV[$name] = $value;
         putenv("$name=$value");
