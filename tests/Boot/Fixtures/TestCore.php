@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -14,13 +15,12 @@ use Spiral\Boot\Exception\BootException;
 
 class TestCore extends AbstractKernel
 {
-    protected function bootstrap()
-    {
-    }
-
     public function getContainer()
     {
         return $this->container;
+    }
+    protected function bootstrap(): void
+    {
     }
 
     /**
@@ -32,7 +32,7 @@ class TestCore extends AbstractKernel
     protected function mapDirectories(array $directories): array
     {
         if (!isset($directories['root'])) {
-            throw new BootException("Missing required directory `root`.");
+            throw new BootException('Missing required directory `root`.');
         }
 
         if (!isset($directories['app'])) {

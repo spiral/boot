@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -17,7 +18,7 @@ use Spiral\Core\Container;
 
 class DependenciesTest extends TestCase
 {
-    public function testDep()
+    public function testDep(): void
     {
         $c = new Container();
 
@@ -29,7 +30,7 @@ class DependenciesTest extends TestCase
         $this->assertFalse($c->has('b'));
     }
 
-    public function testDep2()
+    public function testDep2(): void
     {
         $c = new Container();
 

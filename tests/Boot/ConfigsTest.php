@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -15,7 +16,7 @@ use Spiral\Boot\Tests\Fixtures\TestCore;
 
 class ConfigsTest extends TestCase
 {
-    public function testDirectories()
+    public function testDirectories(): void
     {
         $core = TestCore::init([
             'root'   => __DIR__,

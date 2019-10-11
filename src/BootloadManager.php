@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -18,18 +19,18 @@ use Spiral\Core\Container;
  */
 final class BootloadManager implements Container\SingletonInterface
 {
-    /**
-     * List of bootloaded classes.
-     *
-     * @var array
-     */
-    private $classes = [];
 
     /**
      * @internal
      * @var Container
      */
     protected $container;
+    /**
+     * List of bootloaded classes.
+     *
+     * @var array
+     */
+    private $classes = [];
 
     /**
      * @param Container $container
@@ -62,9 +63,9 @@ final class BootloadManager implements Container\SingletonInterface
      *
      * @throws \Throwable
      */
-    public function bootload(array $classes)
+    public function bootload(array $classes): void
     {
-        $this->container->runScope([self::class => $this], function () use ($classes) {
+        $this->container->runScope([self::class => $this], function () use ($classes): void {
             $this->boot($classes);
         });
     }
@@ -76,7 +77,7 @@ final class BootloadManager implements Container\SingletonInterface
      *
      * @throws \Throwable
      */
-    protected function boot(array $classes)
+    protected function boot(array $classes): void
     {
         foreach ($classes as $class => $options) {
             // default bootload syntax as simple array
@@ -106,7 +107,7 @@ final class BootloadManager implements Container\SingletonInterface
      *
      * @throws \Throwable
      */
-    protected function initBootloader(BootloaderInterface $bootloader, array $options = [])
+    protected function initBootloader(BootloaderInterface $bootloader, array $options = []): void
     {
         if ($bootloader instanceof DependedInterface) {
             $this->boot($bootloader->defineDependencies());
@@ -126,7 +127,7 @@ final class BootloadManager implements Container\SingletonInterface
      * @param array $bindings
      * @param array $singletons
      */
-    protected function initBindings(array $bindings, array $singletons)
+    protected function initBindings(array $bindings, array $singletons): void
     {
         foreach ($bindings as $aliases => $resolver) {
             $this->container->bind($aliases, $resolver);

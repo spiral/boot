@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -25,7 +26,7 @@ use Spiral\Files\FilesInterface;
  */
 final class CoreBootloader extends Bootloader
 {
-    const SINGLETONS = [
+    protected const SINGLETONS = [
         FilesInterface::class        => Files::class,
         MemoryInterface::class       => [self::class, 'memory'],
         ConfigsInterface::class      => ConfiguratorInterface::class,
@@ -38,7 +39,7 @@ final class CoreBootloader extends Bootloader
      * @param FactoryInterface     $factory
      * @return ConfiguratorInterface
      */
-    protected function configManager(
+    private function configManager(
         DirectoriesInterface $directories,
         FactoryInterface $factory
     ): ConfiguratorInterface {
@@ -50,7 +51,7 @@ final class CoreBootloader extends Bootloader
      * @param FilesInterface       $files
      * @return MemoryInterface
      */
-    protected function memory(
+    private function memory(
         DirectoriesInterface $directories,
         FilesInterface $files
     ): MemoryInterface {

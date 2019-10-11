@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -17,7 +18,7 @@ final class Finalizer implements FinalizerInterface
     /**
      * @inheritdoc
      */
-    public function addFinalizer(callable $finalizer)
+    public function addFinalizer(callable $finalizer): void
     {
         $this->finalizers[] = $finalizer;
     }
@@ -25,7 +26,7 @@ final class Finalizer implements FinalizerInterface
     /**
      * @inheritdoc
      */
-    public function finalize(bool $terminate = false)
+    public function finalize(bool $terminate = false): void
     {
         foreach ($this->finalizers as $finalizer) {
             call_user_func($finalizer, $terminate);
