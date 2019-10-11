@@ -12,7 +12,7 @@ namespace Spiral\Boot;
 
 final class Environment implements EnvironmentInterface
 {
-    public const VALUE_MAP = [
+    private const VALUE_MAP = [
         'true'    => true,
         '(true)'  => true,
         'false'   => false,
@@ -51,7 +51,7 @@ final class Environment implements EnvironmentInterface
     /**
      * @inheritdoc
      */
-    public function set(string $name, $value): void
+    public function set(string $name, $value)
     {
         $this->values[$name] = $_ENV[$name] = $value;
         putenv("$name=$value");
