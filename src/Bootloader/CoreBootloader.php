@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Spiral\Boot\Bootloader;
 
 use Spiral\Boot\DirectoriesInterface;
-use Spiral\Boot\FinalizerInterface;
 use Spiral\Boot\Memory;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Config\ConfigManager;
@@ -21,8 +20,6 @@ use Spiral\Config\Loader\DirectoryLoader;
 use Spiral\Core\ConfigsInterface;
 use Spiral\Core\FactoryInterface;
 use Spiral\Debug\Dumper;
-use Spiral\Debug\State;
-use Spiral\Debug\StateInterface;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
 use Spiral\Logger\LogFactory;
@@ -44,19 +41,7 @@ final class CoreBootloader extends Bootloader
         ConfigsInterface::class      => ConfiguratorInterface::class,
         ConfiguratorInterface::class => ConfigManager::class,
         ConfigManager::class         => [self::class, 'configManager'],
-
-        // debug application state
-        StateInterface::class        => State::class
     ];
-
-    /**
-     * @param FinalizerInterface $finalizer
-     * @param StateInterface     $state
-     */
-    public function boot(FinalizerInterface $finalizer, StateInterface $state): void
-    {
-        $finalizer->addFinalizer([$state, 'reset']);
-    }
 
     /**
      * @param DirectoriesInterface $directories
