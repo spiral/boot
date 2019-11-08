@@ -129,16 +129,15 @@ abstract class AbstractKernel implements KernelInterface
             ExceptionHandler::register();
         }
 
+        $environment = $environment ?? new Environment();
+
         $core = new static(new Container(), $directories);
-        $core->container->bindSingleton(
-            EnvironmentInterface::class,
-            $environment ?? new Environment()
-        );
+        $core->container->bindSingleton(EnvironmentInterface::class, $environment);
 
         try {
             // will protect any against env overwrite action
             $core->container->runScope(
-                [EnvironmentInterface::class => $environment ?? new Environment()],
+                [EnvironmentInterface::class => $environment],
                 function () use ($core): void {
                     $core->bootload();
                     $core->bootstrap();
