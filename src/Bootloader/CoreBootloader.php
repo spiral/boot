@@ -22,8 +22,7 @@ use Spiral\Core\FactoryInterface;
 use Spiral\Debug\Dumper;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
-use Spiral\Logger\LogFactory;
-use Spiral\Logger\LogsInterface;
+use Spiral\Logger;
 
 /**
  * Bootloads core services.
@@ -32,15 +31,18 @@ final class CoreBootloader extends Bootloader
 {
     protected const SINGLETONS = [
         // core services and helpers
-        FilesInterface::class        => Files::class,
-        LogsInterface::class         => LogFactory::class,
-        Dumper::class                => Dumper::class,
-        MemoryInterface::class       => [self::class, 'memory'],
+        FilesInterface::class                   => Files::class,
+        MemoryInterface::class                  => [self::class, 'memory'],
+
+        // debug and logging services
+        Dumper::class                           => Dumper::class,
+        Logger\ListenerRegistryInterface::class => Logger\ListenerRegistry::class,
+        Logger\LogsInterface::class             => Logger\LogFactory::class,
 
         // configuration
-        ConfigsInterface::class      => ConfiguratorInterface::class,
-        ConfiguratorInterface::class => ConfigManager::class,
-        ConfigManager::class         => [self::class, 'configManager'],
+        ConfigsInterface::class                 => ConfiguratorInterface::class,
+        ConfiguratorInterface::class            => ConfigManager::class,
+        ConfigManager::class                    => [self::class, 'configManager'],
     ];
 
     /**
