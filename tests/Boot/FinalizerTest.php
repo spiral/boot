@@ -1,11 +1,14 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
+
 namespace Spiral\Boot\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -13,12 +16,12 @@ use Spiral\Boot\Finalizer;
 
 class FinalizerTest extends TestCase
 {
-    public function testFinalize()
+    public function testFinalize(): void
     {
         $f = new Finalizer();
 
         $value = 1;
-        $f->addFinalizer(function () use (&$value) {
+        $f->addFinalizer(function () use (&$value): void {
             $value = 2;
         });
 

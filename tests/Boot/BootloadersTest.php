@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Boot\Tests;
@@ -17,7 +19,7 @@ use Spiral\Core\Container;
 
 class BootloadersTest extends TestCase
 {
-    public function testSchemaLoading()
+    public function testSchemaLoading(): void
     {
         $container = new Container();
 
@@ -34,7 +36,7 @@ class BootloadersTest extends TestCase
     /**
      * @expectedException \Spiral\Core\Exception\Container\NotFoundException
      */
-    public function testException()
+    public function testException(): void
     {
         $container = new Container();
 

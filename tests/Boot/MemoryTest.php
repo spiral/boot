@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Boot\Tests;
@@ -15,7 +17,7 @@ use Spiral\Boot\Tests\Fixtures\TestCore;
 
 class MemoryTest extends TestCase
 {
-    public function testMemory()
+    public function testMemory(): void
     {
         $core = TestCore::init([
             'root'  => __DIR__,
@@ -25,15 +27,15 @@ class MemoryTest extends TestCase
         /** @var MemoryInterface $memory */
         $memory = $core->getContainer()->get(MemoryInterface::class);
 
-        $memory->saveData("test", "data");
+        $memory->saveData('test', 'data');
         $this->assertFileExists(__DIR__ . '/cache/test.php');
-        $this->assertSame("data", $memory->loadData("test"));
+        $this->assertSame('data', $memory->loadData('test'));
 
         unlink(__DIR__ . '/cache/test.php');
-        $this->assertSame(null, $memory->loadData("test"));
+        $this->assertSame(null, $memory->loadData('test'));
     }
 
-    public function testBroken()
+    public function testBroken(): void
     {
         $core = TestCore::init([
             'root'  => __DIR__,
@@ -43,10 +45,10 @@ class MemoryTest extends TestCase
         /** @var MemoryInterface $memory */
         $memory = $core->getContainer()->get(MemoryInterface::class);
 
-        file_put_contents(__DIR__ . '/cache/test.php', "<?php broken");
-        $this->assertSame(null, $memory->loadData("test"));
+        file_put_contents(__DIR__ . '/cache/test.php', '<?php broken');
+        $this->assertSame(null, $memory->loadData('test'));
 
         unlink(__DIR__ . '/cache/test.php');
-        $this->assertSame(null, $memory->loadData("test"));
+        $this->assertSame(null, $memory->loadData('test'));
     }
 }

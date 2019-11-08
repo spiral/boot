@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -12,7 +14,6 @@ namespace Spiral\Boot;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
-use Spiral\Core\ContainerScope;
 
 /**
  * Core responsible for application initialization, bootloading of all required services,
@@ -81,7 +82,7 @@ abstract class AbstractKernel implements KernelInterface
      *
      * @param DispatcherInterface $dispatcher
      */
-    public function addDispatcher(DispatcherInterface $dispatcher)
+    public function addDispatcher(DispatcherInterface $dispatcher): void
     {
         $this->dispatchers[] = $dispatcher;
     }
@@ -93,38 +94,20 @@ abstract class AbstractKernel implements KernelInterface
      * @throws BootException
      * @throws \Throwable
      */
-    public function serve()
+    public function serve(): void
     {
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
-                ContainerScope::runScope($this->container, [$dispatcher, 'serve']);
+                $this->container->runScope(
+                    [DispatcherInterface::class => $dispatcher],
+                    [$dispatcher, 'serve']
+                );
 
                 return;
             }
         }
 
-        throw new BootException("Unable to locate active dispatcher.");
-    }
-
-    /**
-     * Bootstrap application. Must be executed before serve method.
-     */
-    abstract protected function bootstrap();
-
-    /**
-     * Normalizes directory list and adds all required alises.
-     *
-     * @param array $directories
-     * @return array
-     */
-    abstract protected function mapDirectories(array $directories): array;
-
-    /**
-     * Bootload all registered classes using BootloadManager.
-     */
-    private function bootload()
-    {
-        $this->bootloader->bootload(static::LOAD);
+        throw new BootException('Unable to locate active dispatcher.');
     }
 
     /**
@@ -152,7 +135,10 @@ abstract class AbstractKernel implements KernelInterface
         );
 
         try {
-            ContainerScope::runScope($core->container, function () use ($core) {
+            // will protect any against env overwrite action
+            $core->container->runScope([
+                EnvironmentInterface::class => $environment ?? new Environment()
+            ], function () use ($core): void {
                 $core->bootload();
                 $core->bootstrap();
             });
@@ -163,5 +149,26 @@ abstract class AbstractKernel implements KernelInterface
         }
 
         return $core;
+    }
+
+    /**
+     * Bootstrap application. Must be executed before serve method.
+     */
+    abstract protected function bootstrap();
+
+    /**
+     * Normalizes directory list and adds all required alises.
+     *
+     * @param array $directories
+     * @return array
+     */
+    abstract protected function mapDirectories(array $directories): array;
+
+    /**
+     * Bootload all registered classes using BootloadManager.
+     */
+    private function bootload(): void
+    {
+        $this->bootloader->bootload(static::LOAD);
     }
 }

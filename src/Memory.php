@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -58,7 +60,7 @@ final class Memory implements MemoryInterface
     /**
      * {@inheritdoc}
      */
-    public function saveData(string $section, $data)
+    public function saveData(string $section, $data): void
     {
         $this->files->write(
             $this->getFilename($section),
@@ -79,7 +81,7 @@ final class Memory implements MemoryInterface
     {
         //Runtime cache
         return sprintf(
-            "%s/%s.%s",
+            '%s/%s.%s',
             $this->directory,
             strtolower(str_replace(['/', '\\'], '-', $name)),
             self::EXTENSION

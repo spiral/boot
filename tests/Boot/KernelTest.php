@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Boot\Tests;
@@ -18,7 +20,7 @@ class KernelTest extends TestCase
     /**
      * @expectedException \Spiral\Boot\Exception\BootException
      */
-    public function testKernelException()
+    public function testKernelException(): void
     {
         $kernel = TestCore::init([
             'root' => __DIR__
@@ -27,14 +29,13 @@ class KernelTest extends TestCase
         $kernel->serve();
     }
 
-    public function testDispatcher()
+    public function testDispatcher(): void
     {
         $kernel = TestCore::init([
             'root' => __DIR__
         ]);
 
-        $d = new class implements DispatcherInterface
-        {
+        $d = new class() implements DispatcherInterface {
             public $fired = false;
 
             public function canServe(): bool
@@ -42,7 +43,7 @@ class KernelTest extends TestCase
                 return true;
             }
 
-            public function serve()
+            public function serve(): void
             {
                 $this->fired = true;
             }

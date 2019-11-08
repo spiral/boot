@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Boot\Tests;
@@ -16,21 +18,21 @@ use Spiral\Boot\Tests\Fixtures\TestCore;
 
 class EnvironmentTest extends TestCase
 {
-    public function testValue()
+    public function testValue(): void
     {
         $env = $this->getEnv(['key' => 'value']);
 
         $this->assertSame('value', $env->get('key'));
     }
 
-    public function testDefault()
+    public function testDefault(): void
     {
         $env = $this->getEnv(['key' => 'value']);
 
         $this->assertSame('default', $env->get('other', 'default'));
     }
 
-    public function testID()
+    public function testID(): void
     {
         $env = $this->getEnv(['key' => 'value']);
 
@@ -44,7 +46,7 @@ class EnvironmentTest extends TestCase
         $this->assertSame('value', $env->get('other', 'default'));
     }
 
-    public function testNormalize()
+    public function testNormalize(): void
     {
         $env = $this->getEnv(['key' => 'true', 'other' => false]);
         $this->assertSame(true, $env->get('key'));

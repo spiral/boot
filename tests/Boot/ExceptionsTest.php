@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Boot\Tests;
@@ -15,7 +17,7 @@ use Spiral\Boot\Tests\Fixtures\BrokenCore;
 
 class ExceptionsTest extends TestCase
 {
-    public function testKernelException()
+    public function testKernelException(): void
     {
         $output = fopen('php://memory', 'rwb');
         ExceptionHandler::setOutput($output);

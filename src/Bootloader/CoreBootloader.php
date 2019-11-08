@@ -1,15 +1,18 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Boot\Bootloader;
 
 use Spiral\Boot\DirectoriesInterface;
+use Spiral\Boot\FinalizerInterface;
 use Spiral\Boot\Memory;
 use Spiral\Boot\MemoryInterface;
 use Spiral\Config\ConfigManager;
@@ -17,28 +20,50 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Config\Loader\DirectoryLoader;
 use Spiral\Core\ConfigsInterface;
 use Spiral\Core\FactoryInterface;
+use Spiral\Debug\Dumper;
+use Spiral\Debug\State;
+use Spiral\Debug\StateInterface;
 use Spiral\Files\Files;
 use Spiral\Files\FilesInterface;
+use Spiral\Logger\LogFactory;
+use Spiral\Logger\LogsInterface;
 
 /**
  * Bootloads core services.
  */
 final class CoreBootloader extends Bootloader
 {
-    const SINGLETONS = [
+    protected const SINGLETONS = [
+        // core services and helpers
         FilesInterface::class        => Files::class,
+        LogsInterface::class         => LogFactory::class,
+        Dumper::class                => Dumper::class,
         MemoryInterface::class       => [self::class, 'memory'],
+
+        // configuration
         ConfigsInterface::class      => ConfiguratorInterface::class,
         ConfiguratorInterface::class => ConfigManager::class,
         ConfigManager::class         => [self::class, 'configManager'],
+
+        // debug application state
+        StateInterface::class        => State::class
     ];
+
+    /**
+     * @param FinalizerInterface $finalizer
+     * @param StateInterface     $state
+     */
+    public function boot(FinalizerInterface $finalizer, StateInterface $state): void
+    {
+        $finalizer->addFinalizer([$state, 'reset']);
+    }
 
     /**
      * @param DirectoriesInterface $directories
      * @param FactoryInterface     $factory
      * @return ConfiguratorInterface
      */
-    protected function configManager(
+    private function configManager(
         DirectoriesInterface $directories,
         FactoryInterface $factory
     ): ConfiguratorInterface {
@@ -50,7 +75,7 @@ final class CoreBootloader extends Bootloader
      * @param FilesInterface       $files
      * @return MemoryInterface
      */
-    protected function memory(
+    private function memory(
         DirectoriesInterface $directories,
         FilesInterface $files
     ): MemoryInterface {

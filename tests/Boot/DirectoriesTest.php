@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Boot\Tests;
@@ -17,7 +19,7 @@ use Spiral\Boot\Tests\Fixtures\TestCore;
 
 class DirectoriesTest extends TestCase
 {
-    public function testDirectories()
+    public function testDirectories(): void
     {
         $core = TestCore::init([
             'root' => __DIR__
@@ -44,12 +46,12 @@ class DirectoriesTest extends TestCase
     /**
      * @expectedException \Spiral\Boot\Exception\BootException
      */
-    public function testKernelException()
+    public function testKernelException(): void
     {
         $core = TestCore::init([]);
     }
 
-    public function testSetDirectory()
+    public function testSetDirectory(): void
     {
         $core = TestCore::init([
             'root' => __DIR__
@@ -64,7 +66,7 @@ class DirectoriesTest extends TestCase
         $this->assertDir(__DIR__, $dirs->get('alias'));
     }
 
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $core = TestCore::init([
             'root' => __DIR__
@@ -85,7 +87,7 @@ class DirectoriesTest extends TestCase
     /**
      * @expectedException \Spiral\Boot\Exception\DirectoryException
      */
-    public function testGetException()
+    public function testGetException(): void
     {
         $core = TestCore::init([
             'root' => __DIR__
@@ -98,7 +100,7 @@ class DirectoriesTest extends TestCase
         $dirs->get('alias');
     }
 
-    private function assertDir($path, $value)
+    private function assertDir($path, $value): void
     {
         $path = str_replace(['\\', '//'], '/', $path);
         $this->assertSame(rtrim($path, '/') . '/', $value);

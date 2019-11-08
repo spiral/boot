@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Boot\Bootloader;
@@ -20,9 +22,9 @@ namespace Spiral\Boot\Bootloader;
  */
 abstract class Bootloader implements BootloaderInterface, DependedInterface
 {
-    const BINDINGS     = [];
-    const SINGLETONS   = [];
-    const DEPENDENCIES = [];
+    protected const BINDINGS     = [];
+    protected const SINGLETONS   = [];
+    protected const DEPENDENCIES = [];
 
     /**
      * {@inheritdoc}
