@@ -73,6 +73,22 @@ final class Environment implements EnvironmentInterface
     }
 
     /**
+     * Get all environment values.
+     *
+     * @return array
+     */
+    public function getAll(): array
+    {
+        $result = [];
+
+        foreach ($this->values as $key => $value) {
+            $result[$key] = $this->normalize($value);
+        }
+
+        return $result;
+    }
+
+    /**
      * @param mixed $value
      * @return mixed
      */
