@@ -6,7 +6,6 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -14,6 +13,7 @@ namespace Spiral\Boot;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
+use Spiral\Core\ContainerScope;
 
 /**
  * Core responsible for application initialization, bootloading of all required services,
@@ -21,9 +21,7 @@ use Spiral\Core\Container;
  */
 abstract class AbstractKernel implements KernelInterface
 {
-    /**
-     * Defines list of bootloaders to be used for core initialisation and all system components.
-     */
+    /** Defines list of bootloaders to be used for core initialisation and all system components. */
     protected const SYSTEM = [CoreBootloader::class];
 
     /**
@@ -113,9 +111,9 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Initiate application core.
      *
-     * @param array                     $directories Spiral directories should include root,
+     * @param array                     $directories  Spiral directories should include root,
      *                                                libraries and application directories.
-     * @param EnvironmentInterface|null $environment Application specific environment if any.
+     * @param EnvironmentInterface|null $environment  Application specific environment if any.
      * @param bool                      $handleErrors Enable global error handling.
      * @return self|static
      */

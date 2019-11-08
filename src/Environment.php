@@ -13,7 +13,7 @@ namespace Spiral\Boot;
 
 final class Environment implements EnvironmentInterface
 {
-    public const VALUE_MAP = [
+    private const VALUE_MAP = [
         'true'    => true,
         '(true)'  => true,
         'false'   => false,

@@ -21,16 +21,10 @@ use Spiral\Core\Container;
 final class BootloadManager implements Container\SingletonInterface
 {
 
-    /**
-     * @internal
-     * @var Container
-     */
+    /* @var Container @internal */
     protected $container;
-    /**
-     * List of bootloaded classes.
-     *
-     * @var array
-     */
+
+    /** @var array */
     private $classes = [];
 
     /**
@@ -68,7 +62,7 @@ final class BootloadManager implements Container\SingletonInterface
     {
         $this->container->runScope(
             [self::class => $this],
-            function () use ($classes): void {
+            static function () use ($classes): void {
                 $this->boot($classes);
             }
         );
