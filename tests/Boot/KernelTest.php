@@ -13,6 +13,7 @@ namespace Spiral\Boot\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\DispatcherInterface;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Tests\Fixtures\TestCore;
 
 class KernelTest extends TestCase
@@ -53,5 +54,18 @@ class KernelTest extends TestCase
 
         $kernel->serve();
         $this->assertTrue($d->fired);
+    }
+
+
+    public function testEnv(): void
+    {
+        $kernel = TestCore::init([
+            'root' => __DIR__
+        ]);
+
+        $this->assertSame(
+            'VALUE',
+            $kernel->getContainer()->get(EnvironmentInterface::class)->get('INTERNAL')
+        );
     }
 }

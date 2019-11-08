@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Spiral\Boot\Tests\Fixtures;
 
 use Spiral\Boot\AbstractKernel;
+use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Exception\BootException;
 
 class TestCore extends AbstractKernel
@@ -20,8 +21,10 @@ class TestCore extends AbstractKernel
     {
         return $this->container;
     }
+
     protected function bootstrap(): void
     {
+        $this->container->get(EnvironmentInterface::class)->set('INTERNAL', 'VALUE');
     }
 
     /**
