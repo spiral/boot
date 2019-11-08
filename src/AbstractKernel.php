@@ -6,6 +6,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Boot;
@@ -13,7 +14,6 @@ namespace Spiral\Boot;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
-use Spiral\Core\ContainerScope;
 
 /**
  * Core responsible for application initialization, bootloading of all required services,
@@ -40,11 +40,13 @@ abstract class AbstractKernel implements KernelInterface
     protected $bootloader;
 
     /** @var DispatcherInterface[] */
-    private $dispatchers = [];
+    protected $dispatchers = [];
 
     /**
      * @param Container $container
      * @param array     $directories
+     *
+     * @throws \Throwable
      */
     public function __construct(Container $container, array $directories)
     {
@@ -111,11 +113,12 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Initiate application core.
      *
-     * @param array                     $directories  Spiral directories should include root,
-     *                                                libraries and application directories.
-     * @param EnvironmentInterface|null $environment  Application specific environment if any.
+     * @param array                     $directories Directory map, "root" is required.
+     * @param EnvironmentInterface|null $environment Application specific environment if any.
      * @param bool                      $handleErrors Enable global error handling.
      * @return self|static
+     *
+     * @throws \Throwable
      */
     public static function init(
         array $directories,
@@ -134,12 +137,13 @@ abstract class AbstractKernel implements KernelInterface
 
         try {
             // will protect any against env overwrite action
-            $core->container->runScope([
-                EnvironmentInterface::class => $environment ?? new Environment()
-            ], function () use ($core): void {
-                $core->bootload();
-                $core->bootstrap();
-            });
+            $core->container->runScope(
+                [EnvironmentInterface::class => $environment ?? new Environment()],
+                function () use ($core): void {
+                    $core->bootload();
+                    $core->bootstrap();
+                }
+            );
         } catch (\Throwable $e) {
             ExceptionHandler::handleException($e);
 

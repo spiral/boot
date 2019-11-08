@@ -62,7 +62,7 @@ final class BootloadManager implements Container\SingletonInterface
     {
         $this->container->runScope(
             [self::class => $this],
-            static function () use ($classes): void {
+            function () use ($classes): void {
                 $this->boot($classes);
             }
         );
