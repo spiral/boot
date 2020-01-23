@@ -26,6 +26,8 @@ interface DispatcherInterface
 
     /**
      * Start request execution.
+     *
+     * @return mixed
      */
     public function serve();
 }
