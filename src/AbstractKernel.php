@@ -91,19 +91,18 @@ abstract class AbstractKernel implements KernelInterface
      * Start application and serve user requests using selected dispatcher or throw
      * an exception.
      *
+     * @return mixed
      * @throws BootException
      * @throws \Throwable
      */
-    public function serve(): void
+    public function serve()
     {
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
-                $this->container->runScope(
+                return $this->container->runScope(
                     [DispatcherInterface::class => $dispatcher],
                     [$dispatcher, 'serve']
                 );
-
-                return;
             }
         }
 
