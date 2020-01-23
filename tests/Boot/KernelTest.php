@@ -71,7 +71,6 @@ class KernelTest extends TestCase
         ]);
 
         $d = new class() implements DispatcherInterface {
-            public $fired = false;
             public $args = [];
 
             public function canServe(): bool
@@ -81,7 +80,6 @@ class KernelTest extends TestCase
 
             public function serve(bool $arg1 = false, int $arg2 = 3): void
             {
-                $this->fired = true;
                 $this->args = [$arg1, $arg2];
             }
         };
