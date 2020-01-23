@@ -98,9 +98,12 @@ abstract class AbstractKernel implements KernelInterface
     {
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
+                $args = func_get_args();
                 $this->container->runScope(
                     [DispatcherInterface::class => $dispatcher],
-                    [$dispatcher, 'serve']
+                    static function () use ($dispatcher, $args): void {
+                        call_user_func_array([$dispatcher, 'serve'], $args);
+                    }
                 );
 
                 return;
