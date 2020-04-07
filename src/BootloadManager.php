@@ -115,7 +115,13 @@ final class BootloadManager implements Container\SingletonInterface
 
         if ((new \ReflectionClass($bootloader))->hasMethod('boot')) {
             $boot = new \ReflectionMethod($bootloader, 'boot');
-            $boot->invokeArgs($bootloader, $this->container->resolveArguments($boot, $options));
+
+            $args = $this->container->resolveArguments($boot, $options);
+            if (!isset($args['boot'])) {
+                $args['boot'] = $options;
+            }
+
+            $boot->invokeArgs($bootloader, $args);
         }
     }
 
