@@ -14,6 +14,7 @@ namespace Spiral\Boot;
 use Closure;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 use Spiral\Boot\Bootloader\DependedInterface;
+use Spiral\Boot\Exception\ClassNotFoundException;
 use Spiral\Core\Container;
 
 /**
@@ -89,6 +90,21 @@ final class BootloadManager implements Container\SingletonInterface
     }
 
     /**
+     * Resolve all bootloader dependencies and init bindings
+     */
+    protected function initBootloader(BootloaderInterface $bootloader): iterable
+    {
+        if ($bootloader instanceof DependedInterface) {
+            yield from $this->initBootloaders($bootloader->defineDependencies());
+        }
+
+        $this->initBindings(
+            $bootloader->defineBindings(),
+            $bootloader->defineSingletons()
+        );
+    }
+
+    /**
      * Instantiate bootloader objects and resolve dependencies
      *
      * @param array<class-string>|array<class-string, array<string,mixed>> $classes
@@ -106,7 +122,9 @@ final class BootloadManager implements Container\SingletonInterface
             try {
                 $class = (new \ReflectionClass($class))->getName();
             } catch (\ReflectionException $e) {
-                throw new \Spiral\Boot\Exception\ClassNotFoundException();
+                throw new ClassNotFoundException(
+                    \sprintf('Bootloader class `%s` is not exist.', $class)
+                );
             }
 
             if (\in_array($class, $this->classes, true)) {
@@ -116,30 +134,15 @@ final class BootloadManager implements Container\SingletonInterface
             $this->classes[] = $class;
             $bootloader = $this->container->get($class);
 
-            if (! $bootloader instanceof BootloaderInterface) {
+            if (!$bootloader instanceof BootloaderInterface) {
                 continue;
             }
 
             yield from $this->initBootloader($bootloader);
             $this->invokeBootloader($bootloader, 'boot', $options);
 
-            yield \compact('bootloader', 'options');
+            yield $class => \compact('bootloader', 'options');
         }
-    }
-
-    /**
-     * Resolve all bootloader dependencies and init bindings
-     */
-    protected function initBootloader(BootloaderInterface $bootloader): iterable
-    {
-        if ($bootloader instanceof DependedInterface) {
-            yield from $this->initBootloaders($bootloader->defineDependencies());
-        }
-
-        $this->initBindings(
-            $bootloader->defineBindings(),
-            $bootloader->defineSingletons()
-        );
     }
 
     /**
@@ -159,14 +162,14 @@ final class BootloadManager implements Container\SingletonInterface
     private function invokeBootloader(BootloaderInterface $bootloader, string $method, array $options): void
     {
         $refl = new \ReflectionClass($bootloader);
-        if (! $refl->hasMethod($method)) {
+        if (!$refl->hasMethod($method)) {
             return;
         }
 
         $boot = new \ReflectionMethod($bootloader, $method);
 
         $args = $this->container->resolveArguments($boot);
-        if (! isset($args['boot'])) {
+        if (!isset($args['boot'])) {
             $args['boot'] = $options;
         }
 
@@ -179,7 +182,7 @@ final class BootloadManager implements Container\SingletonInterface
     private function fireCallbacks(array $callbacks): void
     {
         foreach ($callbacks as $callback) {
-            $callback($this->container);
+            $this->container->invoke($callback);
         }
     }
 }

@@ -13,6 +13,8 @@ namespace Spiral\Tests\Boot;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\BootloadManager;
+use Spiral\Tests\Boot\Fixtures\BootloaderA;
+use Spiral\Tests\Boot\Fixtures\BootloaderB;
 use Spiral\Tests\Boot\Fixtures\SampleBoot;
 use Spiral\Tests\Boot\Fixtures\SampleBootWithStarted;
 use Spiral\Tests\Boot\Fixtures\SampleClass;
@@ -27,15 +29,15 @@ class BootloadersTest extends TestCase
         $bootloader = new BootloadManager($container);
         $bootloader->bootload($classes = [
             SampleClass::class,
+            SampleBootWithStarted::class,
             SampleBoot::class,
-            SampleBootWithStarted::class
         ], [
-            static function(Container $container) {
-                $container->bind('efg', new SampleBoot());
+            static function(Container $container, SampleBoot $boot) {
+                $container->bind('efg', $boot);
             }
         ], [
-            static function(Container $container) {
-                $container->bind('ghi', new SampleBoot());
+            static function(Container $container, SampleBoot $boot) {
+                $container->bind('ghi', $boot);
             }
         ]);
 
@@ -48,16 +50,20 @@ class BootloadersTest extends TestCase
         $this->assertNotInstanceOf(SampleBoot::class, $container->get('efg'));
         $this->assertInstanceOf(SampleBoot::class, $container->get('ghi'));
 
-        $this->assertSame($classes, $bootloader->getClasses());
+        $this->assertSame(\array_merge($classes, [
+            BootloaderA::class,
+            BootloaderB::class,
+        ]), $bootloader->getClasses());
     }
 
     public function testException(): void
     {
         $this->expectException(\Spiral\Boot\Exception\ClassNotFoundException::class);
+        $this->expectErrorMessage('Bootloader class `Foo\Bar\Invalid` is not exist.');
 
         $container = new Container();
 
         $bootloader = new BootloadManager($container);
-        $bootloader->bootload(['Invalid']);
+        $bootloader->bootload(['Foo\Bar\Invalid']);
     }
 }
