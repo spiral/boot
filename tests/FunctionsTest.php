@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Boot;
@@ -23,10 +16,10 @@ class FunctionsTest extends TestCase
 {
     public function testSpiral(): void
     {
-        $core = TestCore::init([
+        $core = TestCore::create([
             'root'   => __DIR__,
             'config' => __DIR__ . '/config',
-        ]);
+        ])->run();
 
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
@@ -38,10 +31,10 @@ class FunctionsTest extends TestCase
 
     public function testEnv(): void
     {
-        $core = TestCore::init([
+        $core = TestCore::create([
             'root'   => __DIR__,
             'config' => __DIR__ . '/config',
-        ], new Environment([
+        ])->run(new Environment([
             'key' => '(true)',
         ]));
 
@@ -55,10 +48,10 @@ class FunctionsTest extends TestCase
 
     public function testDirectory(): void
     {
-        $core = TestCore::init([
+        $core = TestCore::create([
             'root'   => __DIR__,
             'config' => __DIR__ . '/config',
-        ]);
+        ])->run();
 
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
@@ -79,10 +72,10 @@ class FunctionsTest extends TestCase
     {
         $this->expectException(ScopeException::class);
 
-        $core = TestCore::init([
+        $core = TestCore::create([
             'root'   => __DIR__,
             'config' => __DIR__ . '/config',
-        ]);
+        ])->run();
 
         /** @var ContainerInterface $c */
         $c = $core->getContainer();

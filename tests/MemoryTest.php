@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Boot;
@@ -19,10 +12,10 @@ class MemoryTest extends TestCase
 {
     public function testMemory(): void
     {
-        $core = TestCore::init([
+        $core = TestCore::create([
             'root'  => __DIR__,
             'cache' => __DIR__ . '/cache'
-        ]);
+        ])->run();
 
         /** @var MemoryInterface $memory */
         $memory = $core->getContainer()->get(MemoryInterface::class);
@@ -37,10 +30,10 @@ class MemoryTest extends TestCase
 
     public function testBroken(): void
     {
-        $core = TestCore::init([
+        $core = TestCore::create([
             'root'  => __DIR__,
             'cache' => __DIR__ . '/cache'
-        ]);
+        ])->run();
 
         /** @var MemoryInterface $memory */
         $memory = $core->getContainer()->get(MemoryInterface::class);

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Boot;
@@ -21,9 +14,9 @@ class DirectoriesTest extends TestCase
 {
     public function testDirectories(): void
     {
-        $core = TestCore::init([
+        $core = TestCore::create([
             'root' => __DIR__,
-        ]);
+        ])->run();
 
         /**
          * @var DirectoriesInterface $dirs
@@ -47,14 +40,14 @@ class DirectoriesTest extends TestCase
     {
         $this->expectException(BootException::class);
 
-        $core = TestCore::init([]);
+        TestCore::create([])->run();
     }
 
     public function testSetDirectory(): void
     {
-        $core = TestCore::init([
+        $core = TestCore::create([
             'root' => __DIR__,
-        ]);
+        ])->run();
 
         /**
          * @var DirectoriesInterface $dirs
@@ -67,9 +60,9 @@ class DirectoriesTest extends TestCase
 
     public function testGetAll(): void
     {
-        $core = TestCore::init([
+        $core = TestCore::create([
             'root' => __DIR__,
-        ]);
+        ])->run();
 
         /**
          * @var DirectoriesInterface $dirs
@@ -87,9 +80,9 @@ class DirectoriesTest extends TestCase
     {
         $this->expectException(DirectoryException::class);
 
-        $core = TestCore::init([
+        $core = TestCore::create([
             'root' => __DIR__,
-        ]);
+        ])->run();
 
         /**
          * @var DirectoriesInterface $dirs

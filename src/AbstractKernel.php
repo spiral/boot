@@ -1,20 +1,23 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot;
 
 use Closure;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Boot\Bootloader\CoreBootloader;
+use Spiral\Boot\BootloadManager\BootloadManager;
+use Spiral\Boot\Event\Bootstrapped;
+use Spiral\Boot\Event\DispatcherFound;
+use Spiral\Boot\Event\DispatcherNotFound;
+use Spiral\Boot\Event\Serving;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Core\Container;
+use Spiral\Exceptions\ExceptionHandler;
+use Spiral\Exceptions\ExceptionHandlerInterface;
+use Spiral\Exceptions\ExceptionRendererInterface;
+use Spiral\Exceptions\ExceptionReporterInterface;
 
 /**
  * Core responsible for application initialization, bootloading of all required services,
@@ -31,44 +34,49 @@ abstract class AbstractKernel implements KernelInterface
      */
     protected const LOAD = [];
 
-    /** @var Container */
-    protected $container;
-
-    /** @var FinalizerInterface */
-    protected $finalizer;
-
-    /** @var BootloadManager */
-    protected $bootloader;
+    protected FinalizerInterface $finalizer;
 
     /** @var DispatcherInterface[] */
-    protected $dispatchers = [];
+    protected array $dispatchers = [];
 
     /** @var array<Closure> */
-    private $startingCallbacks = [];
+    private array $runningCallbacks = [];
 
     /** @var array<Closure> */
-    private $startedCallbacks = [];
+    private array $bootingCallbacks = [];
+
+    /** @var array<Closure> */
+    private array $bootedCallbacks = [];
+
+    /** @var array<Closure>  */
+    private array $bootstrappedCallbacks = [];
 
     /**
      * @throws \Throwable
      */
-    public function __construct(Container $container, array $directories)
-    {
-        $this->container = $container;
+    protected function __construct(
+        protected readonly Container $container,
+        protected readonly ExceptionHandlerInterface $exceptionHandler,
+        protected readonly BootloadManagerInterface $bootloader,
+        array $directories
+    ) {
+        $container->bindSingleton(ExceptionHandlerInterface::class, $exceptionHandler);
+        $container->bindSingleton(ExceptionRendererInterface::class, $exceptionHandler);
+        $container->bindSingleton(ExceptionReporterInterface::class, $exceptionHandler);
+        $container->bindSingleton(ExceptionHandler::class, $exceptionHandler);
+        $container->bindSingleton(KernelInterface::class, $this);
 
-        $this->container->bindSingleton(KernelInterface::class, $this);
-        $this->container->bindSingleton(self::class, $this);
-        $this->container->bindSingleton(static::class, $this);
+        $container->bindSingleton(self::class, $this);
+        $container->bindSingleton(static::class, $this);
 
-        $this->container->bindSingleton(
+        $container->bindSingleton(
             DirectoriesInterface::class,
             new Directories($this->mapDirectories($directories))
         );
 
         $this->finalizer = new Finalizer();
-        $this->container->bindSingleton(FinalizerInterface::class, $this->finalizer);
+        $container->bindSingleton(FinalizerInterface::class, $this->finalizer);
 
-        $this->bootloader = new BootloadManager($this->container);
         $this->bootloader->bootload(static::SYSTEM);
     }
 
@@ -81,51 +89,48 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
-     * Create and initiate an application instance.
-     *
-     * @param array<string,string> $directories Directory map, "root" is required.
-     * @param EnvironmentInterface|null $environment Application specific environment if any.
-     * @param bool $handleErrors Enable global error handling.
-     * @return self|static
-     *
-     * @throws \Throwable
-     *
-     * @deprecated since 2.12. Will be removed in v3.0. Use Kernel::create(...)->run() instead.
-     */
-    public static function init(
-        array $directories,
-        EnvironmentInterface $environment = null,
-        bool $handleErrors = true
-    ): ?self {
-        $core = self::create(
-            $directories,
-            $handleErrors
-        );
-
-        return $core->run($environment);
-    }
-
-    /**
      * Create an application instance.
+     *
+     * @param class-string<ExceptionHandlerInterface>|ExceptionHandlerInterface $exceptionHandler
+     *
      * @throws \Throwable
      */
-    public static function create(
+    final public static function create(
         array $directories,
-        bool $handleErrors = true
-    ): self {
-        if ($handleErrors) {
-            ExceptionHandler::register();
+        bool $handleErrors = true,
+        ExceptionHandlerInterface|string|null $exceptionHandler = null,
+        Container $container = new Container(),
+        ?BootloadManagerInterface $bootloadManager = null
+    ): static {
+        $exceptionHandler ??= ExceptionHandler::class;
+
+        if (\is_string($exceptionHandler)) {
+            $exceptionHandler = $container->make($exceptionHandler);
         }
 
-        return new static(new Container(), $directories);
+        if ($handleErrors) {
+            $exceptionHandler->register();
+        }
+
+        $bootloadManager ??= $container->make(BootloadManager::class);
+        \assert($bootloadManager instanceof BootloadManagerInterface);
+        $container->bind(BootloadManagerInterface::class, $bootloadManager);
+
+        return new static(
+            $container,
+            $exceptionHandler,
+            $bootloadManager,
+            $directories
+        );
     }
 
     /**
      * Run the application with given Environment
      *
      * $app = App::create([...]);
-     * $app->starting(...);
-     * $app->started(...);
+     * $app->booting(...);
+     * $app->booted(...);
+     * $app->bootstrapped(...);
      * $app->run(new Environment([
      *     'APP_ENV' => 'production'
      * ]));
@@ -133,8 +138,10 @@ abstract class AbstractKernel implements KernelInterface
      */
     public function run(?EnvironmentInterface $environment = null): ?self
     {
-        $environment = $environment ?? new Environment();
+        $environment ??= new Environment();
         $this->container->bindSingleton(EnvironmentInterface::class, $environment);
+
+        $this->fireCallbacks($this->runningCallbacks);
 
         try {
             // will protect any against env overwrite action
@@ -143,46 +150,79 @@ abstract class AbstractKernel implements KernelInterface
                 function (): void {
                     $this->bootload();
                     $this->bootstrap();
+
+                    $this->fireCallbacks($this->bootstrappedCallbacks);
                 }
             );
         } catch (\Throwable $e) {
-            ExceptionHandler::handleException($e);
+            $this->exceptionHandler->handleGlobalException($e);
 
             return null;
         }
+
+        $this->getEventDispatcher()?->dispatch(new Bootstrapped($this));
 
         return $this;
     }
 
     /**
-     * Register a new callback, that will be fired before application start. (Before all bootloaders will be started)
+     * Register a new callback, that will be fired before framework run.
+     * (After SYSTEM bootloaders, before bootloaders in LOAD section)
      *
-     * $kernel->starting(static function(KernelInterface $kernel) {
+     * $kernel->running(static function(KernelInterface $kernel) {
      *     $kernel->getContainer()->...
      * });
-     *
-     * @internal
      */
-    public function starting(Closure ...$callbacks): void
+    public function running(Closure ...$callbacks): void
     {
         foreach ($callbacks as $callback) {
-            $this->startingCallbacks[] = $callback;
+            $this->runningCallbacks[] = $callback;
         }
     }
 
     /**
-     * Register a new callback, that will be fired after application started. (After starting all bootloaders)
+     * Register a new callback, that will be fired before framework bootloaders boot.
+     * (Before all framework bootloaders in LOAD section will be booted)
      *
-     * $kernel->started(static function(KernelInterface $kernel) {
+     * $kernel->booting(static function(KernelInterface $kernel) {
      *     $kernel->getContainer()->...
      * });
-     *
-     * @internal
      */
-    public function started(Closure ...$callbacks): void
+    public function booting(Closure ...$callbacks): void
     {
         foreach ($callbacks as $callback) {
-            $this->startedCallbacks[] = $callback;
+            $this->bootingCallbacks[] = $callback;
+        }
+    }
+
+    /**
+     * Register a new callback, that will be fired after framework bootloaders booted.
+     * (After booting all framework bootloaders in LOAD section)
+     *
+     * $kernel->booted(static function(KernelInterface $kernel) {
+     *     $kernel->getContainer()->...
+     * });
+     */
+    public function booted(Closure ...$callbacks): void
+    {
+        foreach ($callbacks as $callback) {
+            $this->bootedCallbacks[] = $callback;
+        }
+    }
+
+
+    /**
+     * Register a new callback, that will be fired after framework bootstrapped.
+     * (Before serving)
+     *
+     * $kernel->bootstrapped(static function(KernelInterface $kernel) {
+     *     $kernel->getContainer()->...
+     * });
+     */
+    public function bootstrapped(Closure ...$callbacks): void
+    {
+        foreach ($callbacks as $callback) {
+            $this->bootstrappedCallbacks[] = $callback;
         }
     }
 
@@ -190,29 +230,38 @@ abstract class AbstractKernel implements KernelInterface
      * Add new dispatcher. This method must only be called before method `serve`
      * will be invoked.
      */
-    public function addDispatcher(DispatcherInterface $dispatcher): void
+    public function addDispatcher(DispatcherInterface $dispatcher): self
     {
         $this->dispatchers[] = $dispatcher;
+
+        return $this;
     }
 
     /**
      * Start application and serve user requests using selected dispatcher or throw
      * an exception.
      *
-     * @return mixed
      * @throws BootException
      * @throws \Throwable
      */
-    public function serve()
+    public function serve(): mixed
     {
+        $eventDispatcher = $this->getEventDispatcher();
+        $eventDispatcher?->dispatch(new Serving());
+
         foreach ($this->dispatchers as $dispatcher) {
             if ($dispatcher->canServe()) {
                 return $this->container->runScope(
                     [DispatcherInterface::class => $dispatcher],
-                    [$dispatcher, 'serve']
+                    static function () use ($dispatcher, $eventDispatcher): mixed {
+                        $eventDispatcher?->dispatch(new DispatcherFound($dispatcher));
+                        return $dispatcher->serve();
+                    }
                 );
             }
         }
+
+        $eventDispatcher?->dispatch(new DispatcherNotFound());
 
         throw new BootException('Unable to locate active dispatcher.');
     }
@@ -220,7 +269,7 @@ abstract class AbstractKernel implements KernelInterface
     /**
      * Bootstrap application. Must be executed before serve method.
      */
-    abstract protected function bootstrap();
+    abstract protected function bootstrap(): void;
 
     /**
      * Normalizes directory list and adds all required aliases.
@@ -238,27 +287,9 @@ abstract class AbstractKernel implements KernelInterface
     }
 
     /**
-     * Bootload all registered classes using BootloadManager.
+     * Call the registered booting callbacks.
      */
-    private function bootload(): void
-    {
-        $self = $this;
-        $this->bootloader->bootload(
-            $this->defineBootloaders(),
-            [
-                static function () use ($self): void {
-                    $self->fireCallbacks($self->startingCallbacks);
-                },
-            ]
-        );
-
-        $this->fireCallbacks($this->startedCallbacks);
-    }
-
-    /**
-     * Call the registered starting callbacks.
-     */
-    private function fireCallbacks(array &$callbacks): void
+    protected function fireCallbacks(array &$callbacks): void
     {
         if ($callbacks === []) {
             return;
@@ -269,5 +300,30 @@ abstract class AbstractKernel implements KernelInterface
         } while (\next($callbacks));
 
         $callbacks = [];
+    }
+
+    /**
+     * Bootload all registered classes using BootloadManager.
+     */
+    private function bootload(): void
+    {
+        $self = $this;
+        $this->bootloader->bootload(
+            $this->defineBootloaders(),
+            [
+                static function () use ($self): void {
+                    $self->fireCallbacks($self->bootingCallbacks);
+                },
+            ]
+        );
+
+        $this->fireCallbacks($this->bootedCallbacks);
+    }
+
+    private function getEventDispatcher(): ?EventDispatcherInterface
+    {
+        return $this->container->has(EventDispatcherInterface::class)
+            ? $this->container->get(EventDispatcherInterface::class)
+            : null;
     }
 }

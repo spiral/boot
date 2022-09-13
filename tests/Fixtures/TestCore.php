@@ -1,22 +1,20 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\Fixtures;
 
-use Spiral\Boot\AbstractKernel;
+use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Exception\BootException;
+use Spiral\Framework\Kernel;
 
-class TestCore extends AbstractKernel
+class TestCore extends Kernel
 {
+    protected const SYSTEM = [
+        CoreBootloader::class
+    ];
+
     protected const LOAD = [
         ConfigBootloader::class,
     ];
@@ -28,6 +26,8 @@ class TestCore extends AbstractKernel
 
     protected function bootstrap(): void
     {
+        parent::bootstrap();
+
         $this->container->get(EnvironmentInterface::class)->set('INTERNAL', 'VALUE');
     }
 

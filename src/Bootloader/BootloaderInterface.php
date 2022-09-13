@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot\Bootloader;
@@ -16,6 +9,11 @@ namespace Spiral\Boot\Bootloader;
  * they can be cached.
  *
  * To make class bootable (using method boot() with method injections) declare constant BOOT = true;
+ *
+ * @psalm-type TStaticBindingValue = class-string|non-empty-string|array{class-string, non-empty-string}
+ * @psalm-type TContainerBindingValue = TStaticBindingValue|object|callable
+ * @psalm-type TConstantBinding = array<class-string|non-empty-string, TStaticBindingValue>
+ * @psalm-type TFullBinding = array<class-string|non-empty-string, TContainerBindingValue>
  */
 interface BootloaderInterface
 {
@@ -27,7 +25,7 @@ interface BootloaderInterface
      *      'class' => [self::class, 'createMethod']
      * ]
      *
-     * @return array<string, class-string|callable>
+     * @return TFullBinding
      */
     public function defineBindings(): array;
 
@@ -42,7 +40,7 @@ interface BootloaderInterface
      * You don't need to bind classes which are declared with SINGLETON constant here, spiral will
      * resolve them as singleton automatically.
      *
-     * @return array<string, class-string|callable>
+     * @return TFullBinding
      */
     public function defineSingletons(): array;
 }

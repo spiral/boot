@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Boot\Bootloader;
@@ -19,35 +12,34 @@ namespace Spiral\Boot\Bootloader;
  *
  * Attention, you are able to define your own set of shared (short bindings) components in your
  * bootloader, DO NOT share your business models this way - use regular DI.
+ *
+ * @phpstan-import-type TConstantBinding from BootloaderInterface
  */
 abstract class Bootloader implements BootloaderInterface, DependedInterface
 {
-    /** @var array<string, class-string|callable> */
-    protected const BINDINGS     = [];
-    /** @var array<string, class-string|callable> */
-    protected const SINGLETONS   = [];
-    /** @var array<int, class-string<BootloaderInterface|DependedInterface>> */
+    /**
+     * @var array<string, class-string|callable>
+     * @psalm-var TConstantBinding
+     */
+    protected const BINDINGS = [];
+    /**
+     * @var array<string, class-string|callable>
+     * @psalm-var TConstantBinding
+     */
+    protected const SINGLETONS = [];
+    /** @var class-string<BootloaderInterface>[]|class-string<DependedInterface>[] */
     protected const DEPENDENCIES = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function defineBindings(): array
     {
         return static::BINDINGS;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function defineSingletons(): array
     {
         return static::SINGLETONS;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function defineDependencies(): array
     {
         return static::DEPENDENCIES;
