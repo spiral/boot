@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Boot\Fixtures;
 
-use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Bootloader\CoreBootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Boot\Exception\BootException;
+use Spiral\Framework\Kernel;
 
-class TestCore extends AbstractKernel
+class TestCore extends Kernel
 {
     protected const SYSTEM = [
         CoreBootloader::class
@@ -19,8 +19,6 @@ class TestCore extends AbstractKernel
         ConfigBootloader::class,
     ];
 
-    protected const APP = [];
-
     public function getContainer()
     {
         return $this->container;
@@ -28,9 +26,7 @@ class TestCore extends AbstractKernel
 
     protected function bootstrap(): void
     {
-        $this->bootloader->bootload(
-            $this->defineAppBootloaders()
-        );
+        parent::bootstrap();
 
         $this->container->get(EnvironmentInterface::class)->set('INTERNAL', 'VALUE');
     }
@@ -63,10 +59,5 @@ class TestCore extends AbstractKernel
             'config'    => $directories['app'] . '/config/',
             'resources' => $directories['app'] . '/resources/',
         ], $directories);
-    }
-
-    protected function defineAppBootloaders(): array
-    {
-        return static::APP;
     }
 }
