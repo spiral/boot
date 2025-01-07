@@ -21,7 +21,7 @@ final class BootloadConfigTest extends InitializerTestCase
             BootloaderD::class
         ]));
 
-        self::assertEquals([
+        $this->assertEquals([
             BootloaderA::class => ['bootloader' => new BootloaderA(), 'options' => []],
             BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []]
         ], $result);
@@ -34,7 +34,7 @@ final class BootloadConfigTest extends InitializerTestCase
             BootloaderD::class
         ]));
 
-        self::assertEquals([
+        $this->assertEquals([
             BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []]
         ], $result);
     }
@@ -45,7 +45,7 @@ final class BootloadConfigTest extends InitializerTestCase
             BootloaderA::class => new BootloadConfig(args: ['a' => 'b'])
         ]));
 
-        self::assertEquals([
+        $this->assertEquals([
             BootloaderA::class => ['bootloader' => new BootloaderA(), 'options' => ['a' => 'b']],
         ], $result);
     }
@@ -57,7 +57,7 @@ final class BootloadConfigTest extends InitializerTestCase
             BootloaderD::class
         ], false));
 
-        self::assertEquals([
+        $this->assertEquals([
             BootloaderA::class => ['bootloader' => new BootloaderA(), 'options' => []],
             BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []]
         ], $result);
@@ -66,10 +66,10 @@ final class BootloadConfigTest extends InitializerTestCase
     public function testCallableConfig(): void
     {
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => static fn (): BootloadConfig => new BootloadConfig(args: ['a' => 'b']),
+            BootloaderA::class => static fn () => new BootloadConfig(args: ['a' => 'b']),
         ]));
 
-        self::assertEquals([
+        $this->assertEquals([
             BootloaderA::class => ['bootloader' => new BootloaderA(), 'options' => ['a' => 'b']],
         ], $result);
     }
@@ -79,14 +79,14 @@ final class BootloadConfigTest extends InitializerTestCase
         $this->container->bind(AppEnvironment::class, AppEnvironment::Production);
 
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => static fn (AppEnvironment $env): BootloadConfig => new BootloadConfig(enabled: $env->isLocal()),
+            BootloaderA::class => static fn (AppEnvironment $env) => new BootloadConfig(enabled: $env->isLocal()),
         ]));
-        self::assertSame([], $result);
+        $this->assertEquals([], $result);
 
         $result = \iterator_to_array($this->initializer->init([
-            BootloaderA::class => static fn (AppEnvironment $env): BootloadConfig => new BootloadConfig(enabled: $env->isProduction()),
+            BootloaderA::class => static fn (AppEnvironment $env) => new BootloadConfig(enabled: $env->isProduction()),
         ]));
-        self::assertEquals([BootloaderA::class => ['bootloader' => new BootloaderA(), 'options' => []]], $result);
+        $this->assertEquals([BootloaderA::class => ['bootloader' => new BootloaderA(), 'options' => []]], $result);
     }
 
     #[DataProvider('allowEnvDataProvider')]
@@ -102,7 +102,7 @@ final class BootloadConfigTest extends InitializerTestCase
             ]),
         ]));
 
-        self::assertEquals($expected, $result);
+        $this->assertEquals($expected, $result);
     }
 
     #[DataProvider('denyEnvDataProvider')]
@@ -118,7 +118,7 @@ final class BootloadConfigTest extends InitializerTestCase
             ]),
         ]));
 
-        self::assertEquals($expected, $result);
+        $this->assertEquals($expected, $result);
     }
 
     public function testDenyEnvShouldHaveHigherPriority(): void
@@ -129,7 +129,7 @@ final class BootloadConfigTest extends InitializerTestCase
             BootloaderA::class => new BootloadConfig(allowEnv: ['APP_DEBUG' => true], denyEnv: ['APP_DEBUG' => true]),
         ]));
 
-        self::assertSame([], $result);
+        $this->assertEquals([], $result);
     }
 
     public static function allowEnvDataProvider(): \Traversable

@@ -20,7 +20,7 @@ final class ConfigCheckerTest extends TestCase
             'APP_ENV' => 'dev'
         ]));
 
-        self::assertSame($expected, $checker->canInitialize(BootloaderA::class, $config));
+        $this->assertSame($expected, $checker->canInitialize(BootloaderA::class, $config));
     }
 
     public static function canInitializeDataProvider(): \Traversable

@@ -15,7 +15,7 @@ final class ClassesRegistryTest extends TestCase
     {
         $registry = new ClassesRegistry();
 
-        self::assertSame([], $registry->getClasses());
+        $this->assertSame([], $registry->getClasses());
     }
 
     public function testRegister(): void
@@ -23,19 +23,19 @@ final class ClassesRegistryTest extends TestCase
         $registry = new ClassesRegistry();
 
         $registry->register(BootloaderA::class);
-        self::assertSame([BootloaderA::class], $registry->getClasses());
+        $this->assertSame([BootloaderA::class], $registry->getClasses());
 
         $registry->register(BootloaderB::class);
-        self::assertSame([BootloaderA::class, BootloaderB::class], $registry->getClasses());
+        $this->assertSame([BootloaderA::class, BootloaderB::class], $registry->getClasses());
     }
 
     public function testIsBooted(): void
     {
         $registry = new ClassesRegistry();
 
-        self::assertFalse($registry->isBooted(BootloaderA::class));
+        $this->assertFalse($registry->isBooted(BootloaderA::class));
 
         $registry->register(BootloaderA::class);
-        self::assertTrue($registry->isBooted(BootloaderA::class));
+        $this->assertTrue($registry->isBooted(BootloaderA::class));
     }
 }

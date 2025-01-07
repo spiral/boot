@@ -15,14 +15,14 @@ class EnvironmentTest extends TestCase
     {
         $env = $this->getEnv(['key' => 'value']);
 
-        self::assertSame('value', $env->get('key'));
+        $this->assertSame('value', $env->get('key'));
     }
 
     public function testDefault(): void
     {
         $env = $this->getEnv(['key' => 'value']);
 
-        self::assertSame('default', $env->get('other', 'default'));
+        $this->assertSame('default', $env->get('other', 'default'));
     }
 
     public function testID(): void
@@ -31,56 +31,56 @@ class EnvironmentTest extends TestCase
 
         $id = $env->getID();
 
-        self::assertNotEmpty($id);
+        $this->assertNotEmpty($id);
 
         $env->set('other', 'value');
-        self::assertNotSame($id, $env->getID());
+        $this->assertNotSame($id, $env->getID());
 
-        self::assertSame('value', $env->get('other', 'default'));
+        $this->assertSame('value', $env->get('other', 'default'));
     }
 
     public function testNormalize(): void
     {
         $env = $this->getEnv(['key' => 'true', 'other' => false]);
 
-        self::assertTrue($env->get('key'));
-        self::assertFalse($env->get('other'));
+        $this->assertTrue($env->get('key'));
+        $this->assertFalse($env->get('other'));
     }
 
     public function testSetVariableWithOverwriting(): void
     {
         $env = $this->getEnv(['key' => 'foo']);
 
-        self::assertSame('foo', $env->get('key'));
+        $this->assertSame('foo', $env->get('key'));
         $env->set('key', 'bar');
-        self::assertSame('bar', $env->get('key'));
+        $this->assertSame('bar', $env->get('key'));
     }
 
     public function testSetVariableWithoutOverwriting(): void
     {
         $env = $this->getEnv(['key' => 'foo'], false);
 
-        self::assertSame('foo', $env->get('key'));
+        $this->assertSame('foo', $env->get('key'));
         $env->set('key', 'bar');
-        self::assertSame('foo', $env->get('key'));
+        $this->assertSame('foo', $env->get('key'));
     }
 
     public function testSetNullValueWithOverwriting(): void
     {
         $env = $this->getEnv(['key' => null]);
 
-        self::assertNull($env->get('key'));
+        $this->assertNull($env->get('key'));
         $env->set('key', 'bar');
-        self::assertSame('bar', $env->get('key'));
+        $this->assertSame('bar', $env->get('key'));
     }
 
     public function testSetNullValueWithoutOverwriting(): void
     {
         $env = $this->getEnv(['key' => null], false);
 
-        self::assertNull($env->get('key'));
+        $this->assertNull($env->get('key'));
         $env->set('key', 'bar');
-        self::assertNull($env->get('key'));
+        $this->assertNull($env->get('key'));
     }
 
     /**

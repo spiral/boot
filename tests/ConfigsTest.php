@@ -20,7 +20,7 @@ class ConfigsTest extends TestCase
         /** @var TestConfig $config */
         $config = $core->getContainer()->get(TestConfig::class);
 
-        self::assertSame(['key' => 'value'], $config->toArray());
+        $this->assertSame(['key' => 'value'], $config->toArray());
     }
 
     public function testCustomConfigLoader(): void
@@ -33,6 +33,6 @@ class ConfigsTest extends TestCase
         /** @var ConfiguratorInterface $configurator */
         $configurator = $core->getContainer()->get(ConfiguratorInterface::class);
 
-        self::assertSame(['test-key' => 'test value'], $configurator->getConfig('yaml'));
+        $this->assertSame(['test-key' => 'test value'], $configurator->getConfig('yaml'));
     }
 }
