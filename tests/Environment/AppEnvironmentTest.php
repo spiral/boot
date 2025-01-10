@@ -20,7 +20,7 @@ final class AppEnvironmentTest extends TestCase
 
         $enum = AppEnvironment::detect($env);
 
-        $this->assertSame(AppEnvironment::Local, $enum);
+        self::assertSame(AppEnvironment::Local, $enum);
     }
 
     #[DataProvider('envVariablesDataProvider')]
@@ -32,42 +32,46 @@ final class AppEnvironmentTest extends TestCase
 
         $enum = AppEnvironment::detect($env);
 
-        $this->assertSame($expected, $enum);
+        self::assertSame($expected, $enum);
     }
 
     public static function envVariablesDataProvider(): \Traversable
     {
         yield ['wrong', AppEnvironment::Local];
         yield ['prod', AppEnvironment::Production];
+        yield ['production', AppEnvironment::Production];
         yield ['stage', AppEnvironment::Stage];
         yield ['local', AppEnvironment::Local];
+        yield ['dev', AppEnvironment::Local];
+        yield ['development', AppEnvironment::Local];
         yield ['testing', AppEnvironment::Testing];
+        yield ['test', AppEnvironment::Testing];
     }
 
     public function testClassMethods(): void
     {
         $prod = AppEnvironment::Production;
-        $this->assertTrue($prod->isProduction());
-        $this->assertFalse($prod->isLocal());
-        $this->assertFalse($prod->isStage());
-        $this->assertFalse($prod->isTesting());
+        self::assertTrue($prod->isProduction());
+        self::assertFalse($prod->isLocal());
+        self::assertFalse($prod->isStage());
+        self::assertFalse($prod->isTesting());
 
         $prod = AppEnvironment::Local;
-        $this->assertFalse($prod->isProduction());
-        $this->assertTrue($prod->isLocal());
-        $this->assertFalse($prod->isStage());
-        $this->assertFalse($prod->isTesting());
+        self::assertFalse($prod->isProduction());
+        self::assertTrue($prod->isLocal());
+        self::assertFalse($prod->isStage());
+        self::assertFalse($prod->isTesting());
 
         $prod = AppEnvironment::Stage;
-        $this->assertFalse($prod->isProduction());
-        $this->assertFalse($prod->isLocal());
-        $this->assertTrue($prod->isStage());
-        $this->assertFalse($prod->isTesting());
+        self::assertFalse($prod->isProduction());
+        self::assertFalse($prod->isLocal());
+        self::assertTrue($prod->isStage());
+        self::assertFalse($prod->isTesting());
 
         $prod = AppEnvironment::Testing;
-        $this->assertFalse($prod->isProduction());
-        $this->assertFalse($prod->isLocal());
-        $this->assertFalse($prod->isStage());
-        $this->assertTrue($prod->isTesting());
+        self::assertFalse($prod->isProduction());
+        self::assertFalse($prod->isLocal());
+        self::assertFalse($prod->isStage());
+        self::assertTrue($prod->isTesting());
     }
 }
