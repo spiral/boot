@@ -21,11 +21,11 @@ class MemoryTest extends TestCase
         $memory = $core->getContainer()->get(MemoryInterface::class);
 
         $memory->saveData('test', 'data');
-        self::assertFileExists(__DIR__ . '/cache/test.php');
-        self::assertSame('data', $memory->loadData('test'));
+        $this->assertFileExists(__DIR__ . '/cache/test.php');
+        $this->assertSame('data', $memory->loadData('test'));
 
         unlink(__DIR__ . '/cache/test.php');
-        self::assertNull($memory->loadData('test'));
+        $this->assertNull($memory->loadData('test'));
     }
 
     public function testBroken(): void
@@ -39,9 +39,9 @@ class MemoryTest extends TestCase
         $memory = $core->getContainer()->get(MemoryInterface::class);
 
         file_put_contents(__DIR__ . '/cache/test.php', '<?php broken');
-        self::assertNull($memory->loadData('test'));
+        $this->assertNull($memory->loadData('test'));
 
         unlink(__DIR__ . '/cache/test.php');
-        self::assertNull($memory->loadData('test'));
+        $this->assertNull($memory->loadData('test'));
     }
 }

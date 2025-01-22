@@ -69,11 +69,11 @@ class DirectoriesTest extends TestCase
          */
         $dirs = $core->getContainer()->get(DirectoriesInterface::class);
 
-        self::assertFalse($dirs->has('alias'));
+        $this->assertFalse($dirs->has('alias'));
         $dirs->set('alias', __DIR__);
-        self::assertTrue($dirs->has('alias'));
+        $this->assertTrue($dirs->has('alias'));
 
-        self::assertCount(8, $dirs->getAll());
+        $this->assertCount(8, $dirs->getAll());
     }
 
     public function testGetException(): void
@@ -94,6 +94,6 @@ class DirectoriesTest extends TestCase
     private function assertDir($path, $value): void
     {
         $path = str_replace(['\\', '//'], '/', $path);
-        self::assertSame(rtrim($path, '/') . '/', $value);
+        $this->assertSame(rtrim($path, '/') . '/', $value);
     }
 }

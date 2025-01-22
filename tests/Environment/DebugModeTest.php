@@ -20,7 +20,7 @@ final class DebugModeTest extends TestCase
 
         $enum = DebugMode::detect($env);
 
-        self::assertSame(DebugMode::Disabled, $enum);
+        $this->assertSame(DebugMode::Disabled, $enum);
     }
 
     #[DataProvider('envVariablesDataProvider')]
@@ -32,12 +32,12 @@ final class DebugModeTest extends TestCase
 
         $enum = DebugMode::detect($env);
 
-        self::assertSame($expected, $enum);
+        $this->assertSame($expected, $enum);
 
         if ($enum === DebugMode::Enabled) {
-            self::assertTrue($enum->isEnabled());
+            $this->assertTrue($enum->isEnabled());
         } else {
-            self::assertFalse($enum->isEnabled());
+            $this->assertFalse($enum->isEnabled());
         }
     }
 

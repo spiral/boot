@@ -24,7 +24,7 @@ final class BootloaderCheckerTest extends TestCase
 
         $checker = new BootloaderChecker($registry);
 
-        self::assertFalse($checker->canInitialize('foo'));
+        $this->assertFalse($checker->canInitialize('foo'));
     }
 
     public function testCanInitializeSuccess(): void
@@ -40,6 +40,6 @@ final class BootloaderCheckerTest extends TestCase
 
         $checker = new BootloaderChecker($registry);
 
-        self::assertTrue($checker->canInitialize('foo'));
+        $this->assertTrue($checker->canInitialize('foo'));
     }
 }
