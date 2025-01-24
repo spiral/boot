@@ -14,13 +14,13 @@ class ConfigsTest extends TestCase
     {
         $core = TestCore::create([
             'root'   => __DIR__,
-            'config' => __DIR__ . '/config'
+            'config' => __DIR__ . '/config',
         ])->run();
 
         /** @var TestConfig $config */
         $config = $core->getContainer()->get(TestConfig::class);
 
-        $this->assertSame(['key' => 'value'], $config->toArray());
+        self::assertSame(['key' => 'value'], $config->toArray());
     }
 
     public function testCustomConfigLoader(): void
@@ -33,6 +33,6 @@ class ConfigsTest extends TestCase
         /** @var ConfiguratorInterface $configurator */
         $configurator = $core->getContainer()->get(ConfiguratorInterface::class);
 
-        $this->assertSame(['test-key' => 'test value'], $configurator->getConfig('yaml'));
+        self::assertSame(['test-key' => 'test value'], $configurator->getConfig('yaml'));
     }
 }

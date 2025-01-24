@@ -25,7 +25,7 @@ final class BootloadManagerTest extends TestCase
             $this->container,
             $this->container,
             $this->container,
-            $this->container->get(InitializerInterface::class)
+            $this->container->get(InitializerInterface::class),
         );
 
         $bootloader->bootload($classes = [
@@ -33,26 +33,26 @@ final class BootloadManagerTest extends TestCase
             SampleBootWithMethodBoot::class,
             SampleBoot::class,
         ], [
-            static function(Container $container, SampleBoot $boot) {
+            static function (Container $container, SampleBoot $boot): void {
                 $container->bind('efg', $boot);
-            }
+            },
         ], [
-            static function(Container $container, SampleBoot $boot) {
+            static function (Container $container, SampleBoot $boot): void {
                 $container->bind('ghi', $boot);
-            }
+            },
         ]);
 
-        $this->assertTrue($this->container->has('abc'));
-        $this->assertTrue($this->container->hasInstance('cde'));
-        $this->assertTrue($this->container->hasInstance('def'));
-        $this->assertTrue($this->container->hasInstance('efg'));
-        $this->assertTrue($this->container->has('single'));
-        $this->assertTrue($this->container->has('ghi'));
-        $this->assertNotInstanceOf(SampleBoot::class, $this->container->get('efg'));
-        $this->assertInstanceOf(SampleBoot::class, $this->container->get('ghi'));
+        self::assertTrue($this->container->has('abc'));
+        self::assertTrue($this->container->hasInstance('cde'));
+        self::assertTrue($this->container->hasInstance('def'));
+        self::assertTrue($this->container->hasInstance('efg'));
+        self::assertTrue($this->container->has('single'));
+        self::assertTrue($this->container->has('ghi'));
+        self::assertNotInstanceOf(SampleBoot::class, $this->container->get('efg'));
+        self::assertInstanceOf(SampleBoot::class, $this->container->get('ghi'));
 
         $classes = \array_filter($classes, static fn(string $class): bool => $class !== SampleClass::class);
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
             BootloaderB::class,
         ]), $bootloader->getClasses());

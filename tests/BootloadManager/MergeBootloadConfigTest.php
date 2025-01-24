@@ -17,12 +17,12 @@ final class MergeBootloadConfigTest extends InitializerTestCase
     {
         $result = \iterator_to_array($this->initializer->init([
             BootloaderF::class => new BootloadConfig(enabled: true),
-            BootloaderD::class
+            BootloaderD::class,
         ]));
 
-        $this->assertEquals([
+        self::assertEquals([
             BootloaderF::class => ['bootloader' => new BootloaderF(), 'options' => []],
-            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []]
+            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []],
         ], $result);
     }
 
@@ -32,8 +32,8 @@ final class MergeBootloadConfigTest extends InitializerTestCase
             BootloaderG::class => new BootloadConfig(args: ['foo' => 'bar']),
         ]));
 
-        $this->assertEquals([
-            BootloaderG::class => ['bootloader' => new BootloaderG(), 'options' => ['foo' => 'bar']]
+        self::assertEquals([
+            BootloaderG::class => ['bootloader' => new BootloaderG(), 'options' => ['foo' => 'bar']],
         ], $result);
     }
 
@@ -43,12 +43,12 @@ final class MergeBootloadConfigTest extends InitializerTestCase
             BootloaderG::class => new BootloadConfig(args: ['foo' => 'bar', 'a' => 'baz'], override: false),
         ]));
 
-        $this->assertEquals([
+        self::assertEquals([
             BootloaderG::class => ['bootloader' => new BootloaderG(), 'options' => [
                 'a' => 'baz',
                 'foo' => 'bar',
-                'c' => 'd'
-            ]]
+                'c' => 'd',
+            ]],
         ], $result);
     }
 
@@ -58,10 +58,10 @@ final class MergeBootloadConfigTest extends InitializerTestCase
         $config = $ref->invoke(
             $this->initializer,
             BootloaderH::class,
-            new BootloadConfig(allowEnv: ['foo' => 'bar'])
+            new BootloadConfig(allowEnv: ['foo' => 'bar']),
         );
 
-        $this->assertEquals(['foo' => 'bar'], $config->allowEnv);
+        self::assertEquals(['foo' => 'bar'], $config->allowEnv);
     }
 
     public function testMergeAllowEnv(): void
@@ -70,14 +70,14 @@ final class MergeBootloadConfigTest extends InitializerTestCase
         $config = $ref->invoke(
             $this->initializer,
             BootloaderH::class,
-            new BootloadConfig(allowEnv: ['APP_ENV' => 'dev', 'foo' => 'bar'], override: false)
+            new BootloadConfig(allowEnv: ['APP_ENV' => 'dev', 'foo' => 'bar'], override: false),
         );
 
-        $this->assertEquals([
+        self::assertEquals([
             'foo' => 'bar',
             'APP_ENV' => 'dev',
             'APP_DEBUG' => false,
-            'RR_MODE' => ['http']
+            'RR_MODE' => ['http'],
         ], $config->allowEnv);
     }
 
@@ -87,10 +87,10 @@ final class MergeBootloadConfigTest extends InitializerTestCase
         $config = $ref->invoke(
             $this->initializer,
             BootloaderI::class,
-            new BootloadConfig(denyEnv: ['foo' => 'bar'])
+            new BootloadConfig(denyEnv: ['foo' => 'bar']),
         );
 
-        $this->assertEquals(['foo' => 'bar'], $config->denyEnv);
+        self::assertEquals(['foo' => 'bar'], $config->denyEnv);
     }
 
     public function testMergeDenyEnv(): void
@@ -99,10 +99,10 @@ final class MergeBootloadConfigTest extends InitializerTestCase
         $config = $ref->invoke(
             $this->initializer,
             BootloaderI::class,
-            new BootloadConfig(denyEnv: ['DB_HOST' => 'localhost', 'foo' => 'bar'], override: false)
+            new BootloadConfig(denyEnv: ['DB_HOST' => 'localhost', 'foo' => 'bar'], override: false),
         );
 
-        $this->assertEquals([
+        self::assertEquals([
             'foo' => 'bar',
             'RR_MODE' => 'http',
             'APP_ENV' => ['production', 'prod'],
