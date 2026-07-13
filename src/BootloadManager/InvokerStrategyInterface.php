@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\BootloadManager;
 
-use Spiral\Boot\Attribute\BootloadConfig;
-
 interface InvokerStrategyInterface
 {
     /**
      * Bootload all given bootloaders.
      *
-     * @param array<class-string>|array<class-string, array<string,mixed>|BootloadConfig> $classes
+     * @param array<class-string>|array<class-string, array<string,mixed>> $classes
      */
     public function invokeBootloaders(array $classes, array $bootingCallbacks, array $bootedCallbacks): void;
 }

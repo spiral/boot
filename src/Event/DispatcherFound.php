@@ -13,6 +13,7 @@ use Spiral\Boot\DispatcherInterface;
 final class DispatcherFound
 {
     public function __construct(
-        public readonly DispatcherInterface $dispatcher,
-    ) {}
+        public readonly DispatcherInterface $dispatcher
+    ) {
+    }
 }

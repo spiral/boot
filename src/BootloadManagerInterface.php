@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Boot;
 
-use Spiral\Boot\Attribute\BootloadConfig;
+use Closure;
 use Spiral\Boot\Bootloader\BootloaderInterface;
 
 /**
@@ -28,9 +28,9 @@ interface BootloadManagerInterface
      *    CustomizedBootloader::class => ["option" => "value"]
      * ]
      *
-     * @param TClass[]|array<TClass, array<string,mixed>|BootloadConfig> $classes
-     * @param array<\Closure> $bootingCallbacks
-     * @param array<\Closure> $bootedCallbacks
+     * @param TClass[]|array<TClass, array<string,mixed>> $classes
+     * @param array<Closure> $bootingCallbacks
+     * @param array<Closure> $bootedCallbacks
      *
      * @throws \Throwable
      */

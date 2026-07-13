@@ -18,22 +18,22 @@ class ConfigBootloader extends Bootloader
 
     public function init(Container $container, AbstractKernel $kernel): void
     {
-        $kernel->booting(static function (AbstractKernel $kernel) use ($container): void {
+        $kernel->booting(static function (AbstractKernel $kernel) use ($container) {
             $container->bind('hij', 'foo');
 
-            $kernel->booting(static function () use ($container): void {
+            $kernel->booting(static function () use ($container) {
                 $container->bind('ijk', 'foo');
             });
         });
 
-        $kernel->booted(static function (AbstractKernel $kernel) use ($container): void {
+        $kernel->booted(function (AbstractKernel $kernel) use ($container) {
             $container->bind('jkl', 'foo');
 
-            $kernel->booting(static function () use ($container): void {
+            $kernel->booting(function () use ($container) {
                 $container->bind('klm', 'foo');
             });
 
-            $kernel->booted(static function () use ($container): void {
+            $kernel->booted(function () use ($container) {
                 $container->bind('lmn', 'foo');
             });
         });
@@ -44,11 +44,11 @@ class ConfigBootloader extends Bootloader
     public function boot(ConfigurationBootloader $configuration, AbstractKernel $kernel, Container $container): void
     {
         // won't be executed
-        $kernel->booting(static function (AbstractKernel $kernel) use ($container): void {
+        $kernel->booting(function (AbstractKernel $kernel) use ($container) {
             $container->bind('ghi', 'foo');
         });
 
-        $kernel->booted(static function (AbstractKernel $kernel) use ($container): void {
+        $kernel->booted(function (AbstractKernel $kernel) use ($container) {
             $container->bind('mno', 'foo');
         });
 

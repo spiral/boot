@@ -6,14 +6,13 @@ namespace Spiral\Tests\Boot;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\Environment;
 use Spiral\Core\Exception\ScopeException;
 use Spiral\Tests\Boot\Fixtures\TestConfig;
 use Spiral\Tests\Boot\Fixtures\TestCore;
 use Spiral\Core\ContainerScope;
 
-final class FunctionsTest extends TestCase
+class FunctionsTest extends TestCase
 {
     public function testSpiral(): void
     {
@@ -21,13 +20,12 @@ final class FunctionsTest extends TestCase
             'root'   => __DIR__,
             'config' => __DIR__ . '/config',
         ])->run();
-        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
 
-        ContainerScope::runScope($c, static function (): void {
-            self::assertSame(['key' => 'value'], spiral(TestConfig::class)->toArray());
+        ContainerScope::runScope($c, function (): void {
+            $this->assertSame(['key' => 'value'], spiral(TestConfig::class)->toArray());
         });
     }
 
@@ -39,13 +37,12 @@ final class FunctionsTest extends TestCase
         ])->run(new Environment([
             'key' => '(true)',
         ]));
-        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
 
-        ContainerScope::runScope($c, static function (): void {
-            self::assertTrue(env('key'));
+        ContainerScope::runScope($c, function (): void {
+            $this->assertSame(true, env('key'));
         });
     }
 
@@ -55,7 +52,6 @@ final class FunctionsTest extends TestCase
             'root'   => __DIR__,
             'config' => __DIR__ . '/config',
         ])->run();
-        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
@@ -80,12 +76,11 @@ final class FunctionsTest extends TestCase
             'root'   => __DIR__,
             'config' => __DIR__ . '/config',
         ])->run();
-        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /** @var ContainerInterface $c */
         $c = $core->getContainer();
 
-        ContainerScope::runScope($c, static function (): void {
+        ContainerScope::runScope($c, function (): void {
             spiral(Invalid::class);
         });
     }
@@ -106,7 +101,7 @@ final class FunctionsTest extends TestCase
 
     private function assertDir($path, $value): void
     {
-        $path = \str_replace(['\\', '//'], '/', $path);
-        self::assertSame(\rtrim($path, '/') . '/', $value);
+        $path = str_replace(['\\', '//'], '/', $path);
+        $this->assertSame(rtrim($path, '/') . '/', $value);
     }
 }

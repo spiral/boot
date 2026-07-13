@@ -12,7 +12,8 @@ final class ConfigChecker implements BootloaderCheckerInterface
 {
     public function __construct(
         private readonly EnvironmentInterface $environment,
-    ) {}
+    ) {
+    }
 
     public function canInitialize(BootloaderInterface|string $bootloader, ?BootloadConfig $config = null): bool
     {

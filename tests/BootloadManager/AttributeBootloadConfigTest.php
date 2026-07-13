@@ -18,89 +18,13 @@ use Spiral\Tests\Boot\Fixtures\BootloaderK;
 
 final class AttributeBootloadConfigTest extends InitializerTestCase
 {
-    public static function allowEnvDataProvider(): \Traversable
-    {
-        yield [
-            ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
-            [
-                BootloaderH::class => [
-                    'bootloader' => new BootloaderH(),
-                    'options' => [],
-                    'init_methods' => ['init'],
-                    'boot_methods' => ['boot'],
-                ],
-            ],
-        ];
-        yield [
-            ['APP_ENV' => 'dev', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
-            [],
-        ];
-        yield [
-            ['APP_ENV' => 'prod', 'APP_DEBUG' => true, 'RR_MODE' => 'http'],
-            [],
-        ];
-        yield [
-            ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'jobs'],
-            [],
-        ];
-    }
-
-    public static function denyEnvDataProvider(): \Traversable
-    {
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'prod', 'DB_HOST' => 'db.example.com'],
-            [],
-        ];
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
-            [],
-        ];
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
-            [],
-        ];
-        yield [
-            ['RR_MODE' => 'jobs', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
-            [],
-        ];
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'db.example.com'],
-            [],
-        ];
-        yield [
-            ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
-            [],
-        ];
-        yield [
-            ['RR_MODE' => 'jobs', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
-            [
-                BootloaderI::class => [
-                    'bootloader' => new BootloaderI(),
-                    'options' => [],
-                    'init_methods' => ['init'],
-                    'boot_methods' => ['boot'],
-                ],
-            ],
-        ];
-    }
-
     public function testDefaultBootloadConfig(): void
     {
         $result = \iterator_to_array($this->initializer->init([BootloaderE::class, BootloaderD::class]));
 
-        self::assertEquals([
-            BootloaderE::class => [
-                'bootloader' => new BootloaderE(),
-                'options' => [],
-                'init_methods' => ['init'],
-                'boot_methods' => ['boot'],
-            ],
-            BootloaderD::class => [
-                'bootloader' => new BootloaderD(),
-                'options' => [],
-                'init_methods' => ['init'],
-                'boot_methods' => ['boot'],
-            ],
+        $this->assertEquals([
+            BootloaderE::class => ['bootloader' => new BootloaderE(), 'options' => []],
+            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []]
         ], $result);
     }
 
@@ -108,13 +32,8 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
     {
         $result = \iterator_to_array($this->initializer->init([BootloaderF::class, BootloaderD::class]));
 
-        self::assertEquals([
-            BootloaderD::class => [
-                'bootloader' => new BootloaderD(),
-                'options' => [],
-                'init_methods' => ['init'],
-                'boot_methods' => ['boot'],
-            ],
+        $this->assertEquals([
+            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []]
         ], $result);
     }
 
@@ -122,13 +41,8 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
     {
         $result = \iterator_to_array($this->initializer->init([BootloaderG::class]));
 
-        self::assertEquals([
-            BootloaderG::class => [
-                'bootloader' => new BootloaderG(),
-                'options' => ['a' => 'b', 'c' => 'd'],
-                'init_methods' => ['init'],
-                'boot_methods' => ['boot'],
-            ],
+        $this->assertEquals([
+            BootloaderG::class => ['bootloader' => new BootloaderG(), 'options' => ['a' => 'b', 'c' => 'd']],
         ], $result);
     }
 
@@ -136,19 +50,9 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
     {
         $result = \iterator_to_array($this->initializer->init([BootloaderF::class, BootloaderD::class], false));
 
-        self::assertEquals([
-            BootloaderF::class => [
-                'bootloader' => new BootloaderF(),
-                'options' => [],
-                'init_methods' => ['init'],
-                'boot_methods' => ['boot'],
-            ],
-            BootloaderD::class => [
-                'bootloader' => new BootloaderD(),
-                'options' => [],
-                'init_methods' => ['init'],
-                'boot_methods' => ['boot'],
-            ],
+        $this->assertEquals([
+            BootloaderF::class => ['bootloader' => new BootloaderF(), 'options' => []],
+            BootloaderD::class => ['bootloader' => new BootloaderD(), 'options' => []]
         ], $result);
     }
 
@@ -159,7 +63,7 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
 
         $result = \iterator_to_array($this->initializer->init([BootloaderH::class]));
 
-        self::assertEquals($expected, $result);
+        $this->assertEquals($expected, $result);
     }
 
     #[DataProvider('denyEnvDataProvider')]
@@ -169,7 +73,7 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
 
         $result = \iterator_to_array($this->initializer->init([BootloaderI::class]));
 
-        self::assertEquals($expected, $result);
+        $this->assertEquals($expected, $result);
     }
 
     public function testDenyEnvShouldHaveHigherPriority(): void
@@ -178,24 +82,69 @@ final class AttributeBootloadConfigTest extends InitializerTestCase
 
         $result = \iterator_to_array($this->initializer->init([BootloaderJ::class]));
 
-        self::assertSame([], $result);
+        $this->assertEquals([], $result);
     }
 
     public function testExtendedAttribute(): void
     {
         $this->container->bindSingleton(EnvironmentInterface::class, new Environment(['RR_MODE' => 'http']), true);
         $result = \iterator_to_array($this->initializer->init([BootloaderK::class]));
-        self::assertEquals([
-            BootloaderK::class => [
-                'bootloader' => new BootloaderK(),
-                'options' => [],
-                'init_methods' => ['init'],
-                'boot_methods' => ['boot'],
-            ],
-        ], $result);
+        $this->assertEquals([BootloaderK::class => ['bootloader' => new BootloaderK(), 'options' => []]], $result);
 
         $this->container->bindSingleton(EnvironmentInterface::class, new Environment(['RR_MODE' => 'jobs']), true);
         $result = \iterator_to_array($this->initializer->init([BootloaderK::class]));
-        self::assertSame([], $result);
+        $this->assertEquals([], $result);
+    }
+
+    public static function allowEnvDataProvider(): \Traversable
+    {
+        yield [
+            ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
+            [BootloaderH::class => ['bootloader' => new BootloaderH(), 'options' => []]]
+        ];
+        yield [
+            ['APP_ENV' => 'dev', 'APP_DEBUG' => false, 'RR_MODE' => 'http'],
+            []
+        ];
+        yield [
+            ['APP_ENV' => 'prod', 'APP_DEBUG' => true, 'RR_MODE' => 'http'],
+            []
+        ];
+        yield [
+            ['APP_ENV' => 'prod', 'APP_DEBUG' => false, 'RR_MODE' => 'jobs'],
+            []
+        ];
+    }
+
+    public static function denyEnvDataProvider(): \Traversable
+    {
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'prod', 'DB_HOST' => 'db.example.com'],
+            []
+        ];
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
+            []
+        ];
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
+            []
+        ];
+        yield [
+            ['RR_MODE' => 'jobs', 'APP_ENV' => 'production', 'DB_HOST' => 'db.example.com'],
+            []
+        ];
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'db.example.com'],
+            []
+        ];
+        yield [
+            ['RR_MODE' => 'http', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
+            []
+        ];
+        yield [
+            ['RR_MODE' => 'jobs', 'APP_ENV' => 'dev', 'DB_HOST' => 'localhost'],
+            [BootloaderI::class => ['bootloader' => new BootloaderI(), 'options' => []]]
+        ];
     }
 }

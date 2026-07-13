@@ -12,7 +12,8 @@ final class CanBootedChecker implements BootloaderCheckerInterface
 {
     public function __construct(
         private readonly ClassesRegistry $bootloaders,
-    ) {}
+    ) {
+    }
 
     public function canInitialize(BootloaderInterface|string $bootloader, ?BootloadConfig $config = null): bool
     {

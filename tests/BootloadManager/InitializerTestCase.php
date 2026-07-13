@@ -15,9 +15,6 @@ abstract class InitializerTestCase extends TestCase
     {
         parent::setUp();
 
-        $this->initializer = new Initializer(
-            $this->container,
-            $this->container,
-        );
+        $this->initializer = new Initializer($this->container, $this->container);
     }
 }

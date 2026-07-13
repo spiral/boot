@@ -16,22 +16,6 @@ enum AppEnvironment: string implements InjectableEnumInterface
     case Testing = 'testing';
     case Local = 'local';
 
-    public static function detect(EnvironmentInterface $environment): self
-    {
-        $value = $environment->get('APP_ENV');
-
-        // Aliases
-        $value = match ($value) {
-            'production' => self::Production->value,
-            'test' => self::Testing->value,
-            default => $value,
-        };
-
-        return \is_string($value)
-            ? (self::tryFrom($value) ?? self::Local)
-            : self::Local;
-    }
-
     public function isProduction(): bool
     {
         return $this === self::Production;
@@ -50,5 +34,14 @@ enum AppEnvironment: string implements InjectableEnumInterface
     public function isStage(): bool
     {
         return $this === self::Stage;
+    }
+
+    public static function detect(EnvironmentInterface $environment): self
+    {
+        $value = $environment->get('APP_ENV');
+
+        return \is_string($value)
+            ? (self::tryFrom($value) ?? self::Local)
+            : self::Local;
     }
 }

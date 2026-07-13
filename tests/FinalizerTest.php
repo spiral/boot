@@ -7,19 +7,19 @@ namespace Spiral\Tests\Boot;
 use PHPUnit\Framework\TestCase;
 use Spiral\Boot\Finalizer;
 
-final class FinalizerTest extends TestCase
+class FinalizerTest extends TestCase
 {
     public function testFinalize(): void
     {
         $f = new Finalizer();
 
         $value = 1;
-        $f->addFinalizer(static function () use (&$value): void {
+        $f->addFinalizer(function () use (&$value): void {
             $value = 2;
         });
 
-        self::assertSame(1, $value);
+        $this->assertSame(1, $value);
         $f->finalize();
-        self::assertSame(2, $value);
+        $this->assertSame(2, $value);
     }
 }

@@ -7,4 +7,6 @@ namespace Spiral\Boot\Exception;
 /**
  * Undefined directory alias.
  */
-class DirectoryException extends BootException {}
+class DirectoryException extends BootException
+{
+}

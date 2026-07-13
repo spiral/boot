@@ -27,7 +27,7 @@ final class ConfigurationBootloader extends Bootloader
         ConfigManager::class         => [self::class, 'configManager'],
     ];
 
-    private readonly ConfiguratorInterface $configurator;
+    private ConfiguratorInterface $configurator;
 
     /** @var FileLoaderInterface[] */
     private array $loaders;
@@ -35,7 +35,7 @@ final class ConfigurationBootloader extends Bootloader
     public function __construct(
         ContainerInterface $container,
         private readonly DirectoriesInterface $directories,
-        private readonly BinderInterface $binder,
+        private readonly BinderInterface $binder
     ) {
         $this->loaders = [
             'php' => $container->get(PhpLoader::class),
@@ -47,7 +47,7 @@ final class ConfigurationBootloader extends Bootloader
 
     public function addLoader(string $ext, FileLoaderInterface $loader): void
     {
-        if (!isset($this->loaders[$ext]) || $loader::class !== $this->loaders[$ext]::class) {
+        if (!isset($this->loaders[$ext]) || $this->loaders[$ext]::class !== $loader::class) {
             $this->loaders[$ext] = $loader;
             $this->binder->bindSingleton(ConfigManager::class, $this->createConfigManager());
         }
@@ -57,7 +57,7 @@ final class ConfigurationBootloader extends Bootloader
     {
         return new ConfigManager(
             new DirectoryLoader($this->directories->get('config'), $this->loaders),
-            true,
+            true
         );
     }
 

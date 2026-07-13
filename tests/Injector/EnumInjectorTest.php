@@ -9,6 +9,7 @@ use Spiral\Attributes\AttributeReader;
 use Spiral\Boot\Injector\EnumInjector;
 use Spiral\Boot\Injector\ProvideFrom;
 use Spiral\Core\Container;
+use Spiral\Core\Exception\Container\ContainerException;
 use Spiral\Core\Exception\Container\InjectionException;
 use Spiral\Tests\Boot\Fixtures\InjectableEnum;
 use Spiral\Tests\Boot\Fixtures\InjectableEnumWithNonStaticMethod;
@@ -21,8 +22,8 @@ final class EnumInjectorTest extends TestCase
     {
         $this->expectException(InjectionException::class);
         $this->expectExceptionMessage(
-            "Class `Spiral\Tests\Boot\Fixtures\SampleClass` should contain " .
-            "`Spiral\Boot\Injector\ProvideFrom` attribute with defined detector method.",
+            "Class `Spiral\Tests\Boot\Fixtures\SampleClass` should contain ".
+            "`Spiral\Boot\Injector\ProvideFrom` attribute with defined detector method."
         );
 
         $class = new SampleClass();
@@ -33,7 +34,8 @@ final class EnumInjectorTest extends TestCase
 
     public function testCreateInjectionNotForClass(): void
     {
-        $class = new #[ProvideFrom(method: 'test')] class {};
+        $class = new #[ProvideFrom(method: 'test')] class {
+        };
 
         $ref = new \ReflectionClass($class);
 
@@ -50,14 +52,14 @@ final class EnumInjectorTest extends TestCase
         $container = new Container();
         $enum = $container->get(InjectableEnum::class);
 
-        self::assertSame(InjectableEnum::Bar, $enum);
+        $this->assertSame(InjectableEnum::Bar, $enum);
     }
 
     public function testCreateInjectionForClassWithoutMethod(): void
     {
         $this->expectException(InjectionException::class);
         $this->expectExceptionMessage(
-            "Class `Spiral\Tests\Boot\Fixtures\InjectableEnumWithoutMethod` does not contain `detect` method.",
+            "Class `Spiral\Tests\Boot\Fixtures\InjectableEnumWithoutMethod` does not contain `detect` method."
         );
 
         $container = new Container();
@@ -68,7 +70,7 @@ final class EnumInjectorTest extends TestCase
     {
         $this->expectException(InjectionException::class);
         $this->expectExceptionMessage(
-            "Spiral\Tests\Boot\Fixtures\InjectableEnumWithNonStaticMethod::detect` should be static.",
+            "Spiral\Tests\Boot\Fixtures\InjectableEnumWithNonStaticMethod::detect` should be static."
         );
 
         $container = new Container();
