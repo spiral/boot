@@ -13,7 +13,7 @@ namespace Spiral\Boot\Bootloader;
  * Attention, you are able to define your own set of shared (short bindings) components in your
  * bootloader, DO NOT share your business models this way - use regular DI.
  *
- * @phpstan-import-type TConstantBinding from BootloaderInterface
+ * @psalm-import-type TConstantBinding from BootloaderInterface
  */
 abstract class Bootloader implements BootloaderInterface, DependedInterface
 {
@@ -22,11 +22,13 @@ abstract class Bootloader implements BootloaderInterface, DependedInterface
      * @psalm-var TConstantBinding
      */
     protected const BINDINGS = [];
+
     /**
      * @var array<string, class-string|callable>
      * @psalm-var TConstantBinding
      */
     protected const SINGLETONS = [];
+
     /** @var class-string<BootloaderInterface>[]|class-string<DependedInterface>[] */
     protected const DEPENDENCIES = [];
 

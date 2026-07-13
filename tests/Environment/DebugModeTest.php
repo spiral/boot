@@ -12,6 +12,18 @@ use Spiral\Boot\EnvironmentInterface;
 
 final class DebugModeTest extends TestCase
 {
+    public static function envVariablesDataProvider(): \Traversable
+    {
+        yield [true, DebugMode::Enabled];
+        yield ['true', DebugMode::Enabled];
+        yield ['1', DebugMode::Enabled];
+        yield ['on', DebugMode::Enabled];
+        yield ['false', DebugMode::Disabled];
+        yield ['0', DebugMode::Disabled];
+        yield ['off', DebugMode::Disabled];
+        yield [false, DebugMode::Disabled];
+    }
+
     public function testDetectWithoutEnvironmentVariable(): void
     {
         $env = m::mock(EnvironmentInterface::class);
@@ -20,7 +32,7 @@ final class DebugModeTest extends TestCase
 
         $enum = DebugMode::detect($env);
 
-        $this->assertSame(DebugMode::Disabled, $enum);
+        self::assertSame(DebugMode::Disabled, $enum);
     }
 
     #[DataProvider('envVariablesDataProvider')]
@@ -32,24 +44,12 @@ final class DebugModeTest extends TestCase
 
         $enum = DebugMode::detect($env);
 
-        $this->assertSame($expected, $enum);
+        self::assertSame($expected, $enum);
 
         if ($enum === DebugMode::Enabled) {
-            $this->assertTrue($enum->isEnabled());
+            self::assertTrue($enum->isEnabled());
         } else {
-            $this->assertFalse($enum->isEnabled());
+            self::assertFalse($enum->isEnabled());
         }
-    }
-
-    public static function envVariablesDataProvider(): \Traversable
-    {
-        yield [true, DebugMode::Enabled];
-        yield ['true', DebugMode::Enabled];
-        yield ['1', DebugMode::Enabled];
-        yield ['on', DebugMode::Enabled];
-        yield ['false', DebugMode::Disabled];
-        yield ['0', DebugMode::Disabled];
-        yield ['off', DebugMode::Disabled];
-        yield [false, DebugMode::Disabled];
     }
 }

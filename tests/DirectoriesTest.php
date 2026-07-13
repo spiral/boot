@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace Spiral\Tests\Boot;
 
 use PHPUnit\Framework\TestCase;
+use Spiral\Boot\AbstractKernel;
 use Spiral\Boot\DirectoriesInterface;
 use Spiral\Boot\Exception\BootException;
 use Spiral\Boot\Exception\DirectoryException;
 use Spiral\Tests\Boot\Fixtures\TestCore;
 
-class DirectoriesTest extends TestCase
+final class DirectoriesTest extends TestCase
 {
     public function testDirectories(): void
     {
         $core = TestCore::create([
             'root' => __DIR__,
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /**
          * @var DirectoriesInterface $dirs
@@ -48,6 +50,7 @@ class DirectoriesTest extends TestCase
         $core = TestCore::create([
             'root' => __DIR__,
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /**
          * @var DirectoriesInterface $dirs
@@ -63,17 +66,18 @@ class DirectoriesTest extends TestCase
         $core = TestCore::create([
             'root' => __DIR__,
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /**
          * @var DirectoriesInterface $dirs
          */
         $dirs = $core->getContainer()->get(DirectoriesInterface::class);
 
-        $this->assertFalse($dirs->has('alias'));
+        self::assertFalse($dirs->has('alias'));
         $dirs->set('alias', __DIR__);
-        $this->assertTrue($dirs->has('alias'));
+        self::assertTrue($dirs->has('alias'));
 
-        $this->assertCount(8, $dirs->getAll());
+        self::assertCount(8, $dirs->getAll());
     }
 
     public function testGetException(): void
@@ -83,6 +87,7 @@ class DirectoriesTest extends TestCase
         $core = TestCore::create([
             'root' => __DIR__,
         ])->run();
+        self::assertInstanceOf(AbstractKernel::class, $core);
 
         /**
          * @var DirectoriesInterface $dirs
@@ -93,7 +98,7 @@ class DirectoriesTest extends TestCase
 
     private function assertDir($path, $value): void
     {
-        $path = str_replace(['\\', '//'], '/', $path);
-        $this->assertSame(rtrim($path, '/') . '/', $value);
+        $path = \str_replace(['\\', '//'], '/', $path);
+        self::assertSame(\rtrim($path, '/') . '/', $value);
     }
 }

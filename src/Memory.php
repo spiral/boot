@@ -18,15 +18,15 @@ final class Memory implements MemoryInterface
 
     public function __construct(
         string $directory,
-        private readonly FilesInterface $files
+        private readonly FilesInterface $files,
     ) {
         $this->directory = \rtrim($directory, '/');
     }
 
     /**
-     * @param string $filename Cache filename.
+     * @param non-empty-string|null $filename Cache filename.
      */
-    public function loadData(string $section, string &$filename = null): mixed
+    public function loadData(string $section, ?string &$filename = null): mixed
     {
         $filename = $this->getFilename($section);
 
@@ -34,10 +34,27 @@ final class Memory implements MemoryInterface
             return null;
         }
 
+        $fp = false;
+        $lock = false;
+
         try {
+            $fp = \fopen($filename, 'r');
+            if ($fp === false) {
+                return null;
+            }
+
+            $lock = \flock($fp, \LOCK_SH | \LOCK_NB);
+
+            if ($lock === false) {
+                return null;
+            }
+
             return include($filename);
         } catch (\Throwable) {
             return null;
+        } finally {
+            $lock === false or \flock($fp, \LOCK_UN);
+            $fp === false or \fclose($fp);
         }
     }
 
@@ -47,7 +64,7 @@ final class Memory implements MemoryInterface
             $this->getFilename($section),
             '<?php return ' . \var_export($data, true) . ';',
             FilesInterface::RUNTIME,
-            true
+            true,
         );
     }
 
@@ -63,7 +80,7 @@ final class Memory implements MemoryInterface
             '%s/%s.%s',
             $this->directory,
             \strtolower(\str_replace(['/', '\\'], '-', $name)),
-            self::EXTENSION
+            self::EXTENSION,
         );
     }
 }

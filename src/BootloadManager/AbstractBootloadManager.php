@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Boot\BootloadManager;
 
+use Spiral\Boot\Attribute\BootloadConfig;
 use Spiral\Boot\BootloadManagerInterface;
 use Spiral\Core\Attribute\Singleton;
 use Spiral\Core\ScopeInterface;
@@ -16,9 +17,8 @@ abstract class AbstractBootloadManager implements BootloadManagerInterface
 {
     public function __construct(
         private readonly ScopeInterface $scope,
-        protected readonly InitializerInterface $initializer
-    ) {
-    }
+        protected readonly InitializerInterface $initializer,
+    ) {}
 
     public function getClasses(): array
     {
@@ -29,21 +29,21 @@ abstract class AbstractBootloadManager implements BootloadManagerInterface
         array $classes,
         array $bootingCallbacks = [],
         array $bootedCallbacks = [],
-        bool $useConfig = true
+        bool $useConfig = true,
     ): void {
         $this->scope->runScope(
             [self::class => $this],
             function () use ($classes, $bootingCallbacks, $bootedCallbacks, $useConfig): void {
                 /** @psalm-suppress TooManyArguments */
                 $this->boot($classes, $bootingCallbacks, $bootedCallbacks, $useConfig);
-            }
+            },
         );
     }
 
     /**
      * Bootload all given bootloaders.
      *
-     * @param array<class-string>|array<class-string, array<string,mixed>> $classes
+     * @param array<class-string>|array<class-string, array<string,mixed>|BootloadConfig> $classes
      */
     abstract protected function boot(array $classes, array $bootingCallbacks, array $bootedCallbacks): void;
 }

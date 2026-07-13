@@ -10,6 +10,8 @@ use Spiral\Core\Container;
 use Spiral\Tests\Boot\Fixtures\BootloaderA;
 use Spiral\Tests\Boot\Fixtures\BootloaderB;
 use Spiral\Tests\Boot\Fixtures\BootloaderC;
+use Spiral\Tests\Boot\Fixtures\BootloaderD;
+use Spiral\Tests\Boot\Fixtures\BootloaderWithAttributes;
 use Spiral\Tests\Boot\Fixtures\SampleBoot;
 use Spiral\Tests\Boot\Fixtures\SampleBootWithMethodBoot;
 use Spiral\Tests\Boot\Fixtures\SampleClass;
@@ -21,31 +23,45 @@ final class BootloadersTest extends TestCase
     {
         $bootloader = $this->getBootloadManager();
 
-        $bootloader->bootload($classes = [
-            SampleClass::class,
-            SampleBootWithMethodBoot::class,
-            SampleBoot::class,
-        ], [
-            static function(Container $container, SampleBoot $boot) {
-                $container->bind('efg', $boot);
-            }
-        ], [
-            static function(Container $container, SampleBoot $boot) {
-                $container->bind('ghi', $boot);
-            }
-        ]);
+        $bootloader->bootload(
+            $classes = [
+                SampleClass::class,
+                SampleBootWithMethodBoot::class,
+                SampleBoot::class,
+            ],
+            [
+                static function (Container $container, SampleBoot $boot): void {
+                    $container->bind('efg', $boot);
+                },
+            ],
+            [
+                static function (Container $container, SampleBoot $boot): void {
+                    $container->bind('ghi', $boot);
+                },
+            ],
+        );
 
-        $this->assertTrue($this->container->has('abc'));
-        $this->assertTrue($this->container->hasInstance('cde'));
-        $this->assertTrue($this->container->hasInstance('def'));
-        $this->assertTrue($this->container->hasInstance('efg'));
-        $this->assertTrue($this->container->has('single'));
-        $this->assertTrue($this->container->has('ghi'));
-        $this->assertNotInstanceOf(SampleBoot::class, $this->container->get('efg'));
-        $this->assertInstanceOf(SampleBoot::class, $this->container->get('ghi'));
+        self::assertTrue($this->container->has('abc'));
+        self::assertTrue($this->container->hasInstance('cde'));
+        self::assertTrue($this->container->hasInstance('def'));
+        self::assertTrue($this->container->hasInstance('efg'));
+        self::assertTrue($this->container->hasInstance('efg'));
+        self::assertTrue($this->container->hasInstance('ijk'));
+        self::assertTrue($this->container->has('single'));
+        self::assertTrue($this->container->has('singleAbc'));
+        self::assertTrue($this->container->has('ghi'));
+        self::assertTrue($this->container->has('hij'));
+
+        self::assertNotInstanceOf(SampleBoot::class, $this->container->get('efg'));
+        self::assertInstanceOf(SampleBoot::class, $this->container->get('ghi'));
+        self::assertInstanceOf(SampleClass::class, $this->container->get('hij'));
+        self::assertInstanceOf(SampleClass::class, $this->container->get('singleAbc'));
+
+        self::assertSame($this->container->get('singleAbc'), $this->container->get('singleAbc'));
+        self::assertNotSame($this->container->get('hij'), $this->container->get('hij'));
 
         $classes = \array_filter($classes, static fn(string $class): bool => $class !== SampleClass::class);
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
             BootloaderB::class,
         ]), $bootloader->getClasses());
@@ -61,14 +77,14 @@ final class BootloadersTest extends TestCase
             new SampleBoot(),
         ]);
 
-        $this->assertTrue($this->container->has('abc'));
-        $this->assertTrue($this->container->has('single'));
-        $this->assertTrue($this->container->hasInstance('def'));
-        $this->assertTrue($this->container->hasInstance('efg'));
-        $this->assertTrue($this->container->hasInstance('cde'));
-        $this->assertTrue($this->container->has('ghi'));
+        self::assertTrue($this->container->has('abc'));
+        self::assertTrue($this->container->has('single'));
+        self::assertTrue($this->container->hasInstance('def'));
+        self::assertTrue($this->container->hasInstance('efg'));
+        self::assertTrue($this->container->hasInstance('cde'));
+        self::assertTrue($this->container->has('ghi'));
 
-        $this->assertSame([
+        self::assertSame([
             SampleBootWithMethodBoot::class,
             SampleBoot::class,
             BootloaderA::class,
@@ -81,7 +97,7 @@ final class BootloadersTest extends TestCase
         $bootloader = $this->getBootloadManager();
 
         $bootloader->bootload([
-            new class () extends Bootloader {
+            new class extends Bootloader {
                 public const BINDINGS = ['abc' => self::class];
                 public const SINGLETONS = ['single' => self::class];
 
@@ -98,19 +114,46 @@ final class BootloadersTest extends TestCase
             },
         ]);
 
-        $this->assertTrue($this->container->has('abc'));
-        $this->assertTrue($this->container->has('single'));
-        $this->assertTrue($this->container->hasInstance('def'));
-        $this->assertTrue($this->container->hasInstance('efg'));
-        $this->assertTrue($this->container->has('ghi'));
+        self::assertTrue($this->container->has('abc'));
+        self::assertTrue($this->container->has('single'));
+        self::assertTrue($this->container->hasInstance('def'));
+        self::assertTrue($this->container->hasInstance('efg'));
+        self::assertTrue($this->container->has('ghi'));
 
-        $this->assertCount(1, $bootloader->getClasses());
+        self::assertCount(1, $bootloader->getClasses());
+    }
+
+    public function testBootloaderWithAttributes(): void
+    {
+        $bootloader = $this->getBootloadManager();
+
+        $bootloader->bootload([
+            BootloaderWithAttributes::class,
+        ]);
+
+        self::assertTrue($this->container->has('init'));
+        self::assertTrue($this->container->has('initMethodA'));
+        self::assertTrue($this->container->has('initMethodB'));
+        self::assertTrue($this->container->has('initMethodC'));
+        self::assertTrue($this->container->has('initMethodD'));
+        self::assertTrue($this->container->has('initMethodE'));
+        self::assertTrue($this->container->has('initMethodF'));
+        self::assertFalse($this->container->has('initMethodG'));
+
+        self::assertTrue($this->container->has('boot'));
+        self::assertTrue($this->container->has('bootMethodA'));
+        self::assertTrue($this->container->has('bootMethodB'));
+        self::assertTrue($this->container->has('bootMethodC'));
+        self::assertTrue($this->container->has('bootMethodD'));
+        self::assertTrue($this->container->has('bootMethodE'));
+        self::assertTrue($this->container->has('bootMethodF'));
+        self::assertFalse($this->container->has('bootMethodG'));
     }
 
     public function testException(): void
     {
         $this->expectException(\Spiral\Boot\Exception\ClassNotFoundException::class);
-        $this->expectExceptionMessage('Bootloader class `Foo\Bar\Invalid` is not exist.');
+        $this->expectExceptionMessage('Bootloader class `Foo\Bar\Invalid` does not exist.');
 
         $bootloader = $this->getBootloadManager();
         $bootloader->bootload(['Foo\Bar\Invalid']);
@@ -119,11 +162,13 @@ final class BootloadersTest extends TestCase
     public function testDependenciesFromConstant(): void
     {
         $bootloader = $this->getBootloadManager();
-        $bootloader->bootload($classes = [
-            SampleBoot::class,
-        ]);
+        $bootloader->bootload(
+            $classes = [
+                SampleBoot::class,
+            ],
+        );
 
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
             BootloaderB::class,
         ]), $bootloader->getClasses());
@@ -132,11 +177,13 @@ final class BootloadersTest extends TestCase
     public function testDependenciesFromInterfaceMethod(): void
     {
         $bootloader = $this->getBootloadManager();
-        $bootloader->bootload($classes = [
-            BootloaderB::class,
-        ]);
+        $bootloader->bootload(
+            $classes = [
+                BootloaderB::class,
+            ],
+        );
 
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
         ]), $bootloader->getClasses());
     }
@@ -144,13 +191,16 @@ final class BootloadersTest extends TestCase
     public function testDependenciesFromInitAndBootMethods(): void
     {
         $bootloader = $this->getBootloadManager();
-        $bootloader->bootload($classes = [
-            BootloaderC::class,
-        ]);
+        $bootloader->bootload(
+            $classes = [
+                BootloaderC::class,
+            ],
+        );
 
-        $this->assertSame(\array_merge($classes, [
+        self::assertSame(\array_merge($classes, [
             BootloaderA::class,
-            BootloaderB::class
+            BootloaderD::class,
+            BootloaderB::class,
         ]), $bootloader->getClasses());
     }
 }
